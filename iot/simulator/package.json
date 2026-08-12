@@ -1,0 +1,19 @@
+{
+  "name": "futurekawa-iot-simulator",
+  "version": "1.0.0",
+  "description": "Simulateur IoT FutureKawa – publie des mesures température/humidité via MQTT",
+  "main": "dist/simulator.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/simulator.js",
+    "dev": "ts-node src/simulator.ts"
+  },
+  "dependencies": {
+    "mqtt": "^5.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Measurement {
+  id          Int      @id @default(autoincrement())
+  warehouseId String
+  countryCode String
+  temperature Float
+  humidity    Float
+  timestamp   DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([warehouseId])
+  @@index([timestamp])
+}

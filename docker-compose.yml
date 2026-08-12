@@ -40,6 +40,46 @@ services:
     restart: unless-stopped
 
   # ─────────────────────────────────────────────
+  # Backend pays (Brésil) – API REST + consumer MQTT
+  # ─────────────────────────────────────────────
+  backend-country:
+    build:
+      context: ./backend-country
+      dockerfile: Dockerfile
+    container_name: futurekawa_backend_country
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      MQTT_BROKER_URL: mqtt://mosquitto:1883
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
+  # Simulateur IoT – publie des mesures MQTT
+  # ─────────────────────────────────────────────
+  iot-simulator:
+    build:
+      context: ./iot/simulator
+      dockerfile: Dockerfile
+    container_name: futurekawa_iot_simulator
+    environment:
+      MQTT_BROKER_URL: mqtt://mosquitto:1883
+      INTERVAL_MS: 10000
+    depends_on:
+      - mosquitto
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
   # MailHog – serveur SMTP de test
   # ─────────────────────────────────────────────
   mailhog:
