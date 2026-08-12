@@ -1,5 +1,6 @@
 import mqtt from 'mqtt';
 import prisma from './prisma';
+import { checkAlerts } from './alertService';
 
 const BROKER_URL = process.env.MQTT_BROKER_URL ?? 'mqtt://localhost:1883';
 const TOPIC = 'futurekawa/brazil/+/measurements';
@@ -66,6 +67,12 @@ export function startMqttClient(): void {
       console.log(
         `[mqtt] Mesure enregistrée — ${data.warehouseId}  T=${data.temperature}°C  H=${data.humidity}%`
       );
+      await checkAlerts({
+        warehouseId: data.warehouseId,
+        countryCode: data.countryCode,
+        temperature: data.temperature,
+        humidity:    data.humidity,
+      });
     } catch (err) {
       console.error('[mqtt] Erreur base de données :', err);
     }

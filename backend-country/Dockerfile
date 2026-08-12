@@ -20,4 +20,4 @@ COPY prisma/ ./prisma/
 RUN npm ci --omit=dev && npx prisma generate
 COPY --from=builder /app/dist ./dist
 # db push synchronise le schéma Prisma avec PostgreSQL avant de démarrer l'API
-CMD ["sh", "-c", "npx prisma db push && node dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]

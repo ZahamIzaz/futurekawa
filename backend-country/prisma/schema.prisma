@@ -19,3 +19,42 @@ model Measurement {
   @@index([warehouseId])
   @@index([timestamp])
 }
+
+enum LotStatus {
+  COMPLIANT
+  ALERT
+  EXPIRED
+}
+
+model Lot {
+  id          String    @id @default(cuid())
+  warehouseId String
+  countryCode String
+  storageDate DateTime
+  status      LotStatus @default(COMPLIANT)
+  createdAt   DateTime  @default(now())
+
+  @@index([storageDate])
+  @@index([warehouseId])
+}
+
+enum AlertType {
+  TEMPERATURE
+  HUMIDITY
+}
+
+model Alert {
+  id            String    @id @default(cuid())
+  warehouseId   String
+  countryCode   String
+  type          AlertType
+  message       String
+  measuredValue Float
+  minAllowed    Float
+  maxAllowed    Float
+  createdAt     DateTime  @default(now())
+  resolvedAt    DateTime?
+
+  // Index composite pour la recherche d'alertes actives (resolvedAt IS NULL)
+  @@index([warehouseId, type, resolvedAt])
+}
