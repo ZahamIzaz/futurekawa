@@ -40,6 +40,25 @@ services:
     restart: unless-stopped
 
   # ─────────────────────────────────────────────
+  # Backend central siège – agrégateur REST
+  # ─────────────────────────────────────────────
+  backend-central:
+    build:
+      context: ./backend-central
+      dockerfile: Dockerfile
+    container_name: futurekawa_backend_central
+    environment:
+      PORT: 3000
+      BRAZIL_BACKEND_URL: http://backend-country:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend-country
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
   # Backend pays (Brésil) – API REST + consumer MQTT
   # ─────────────────────────────────────────────
   backend-country:
