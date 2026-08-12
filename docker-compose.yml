@@ -51,6 +51,10 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       MQTT_BROKER_URL: mqtt://mosquitto:1883
       PORT: 3001
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      MAIL_FROM: alerts@futurekawa.local
+      BRAZIL_MANAGER_EMAIL: responsable.bresil@futurekawa.local
     ports:
       - "3001:3001"
     depends_on:

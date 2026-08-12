@@ -1,4 +1,5 @@
 import prisma from './prisma';
+import { sendAlertEmail } from './services/email.service';
 
 const EXPIRY_DAYS = 365;
 
@@ -59,6 +60,18 @@ export async function checkExpiredLots(): Promise<number> {
       console.log(
         `[expiry] LOT_EXPIRED créé — lot ${lot.id} (${lot.warehouseId}) : ${daysStored} jours`
       );
+      await sendAlertEmail({
+        type:          'LOT_EXPIRED',
+        countryCode:   lot.countryCode,
+        warehouseId:   lot.warehouseId,
+        measuredValue: daysStored,
+        minAllowed:    0,
+        maxAllowed:    EXPIRY_DAYS,
+        createdAt:     new Date(),
+        lotId:         lot.id,
+        daysStored,
+        storageDate:   lot.storageDate,
+      });
       newlyExpiredCount++;
     }
   }

@@ -1,6 +1,7 @@
 import { AlertType } from '@prisma/client';
 import prisma from './prisma';
 import { COUNTRY_THRESHOLDS, getRange } from './config/thresholds';
+import { sendAlertEmail } from './services/email.service';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Données de mesure passées par le consumer MQTT
@@ -52,6 +53,15 @@ async function processAlert(
     console.log(
       `[alert] ${type} créée — ${warehouseId} : ${measuredValue}${unit} hors plage [${min}-${max}]`
     );
+    await sendAlertEmail({
+      type,
+      countryCode,
+      warehouseId,
+      measuredValue,
+      minAllowed: min,
+      maxAllowed: max,
+      createdAt:  new Date(),
+    });
     return;
   }
 
