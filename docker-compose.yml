@@ -1,0 +1,68 @@
+services:
+
+  # ─────────────────────────────────────────────
+  # Base de données PostgreSQL (backend pays)
+  # ─────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: futurekawa_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────────
+  # Broker MQTT Eclipse Mosquitto
+  # ─────────────────────────────────────────────
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: futurekawa_mosquitto
+    ports:
+      - "${MQTT_PORT}:1883"
+    volumes:
+      - ./infrastructure/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
+  # MailHog – serveur SMTP de test
+  # ─────────────────────────────────────────────
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: futurekawa_mailhog
+    ports:
+      - "${MAILHOG_SMTP_PORT}:1025"   # SMTP
+      - "${MAILHOG_UI_PORT}:8025"     # Interface Web
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+
+# ─────────────────────────────────────────────
+# Volumes nommés (persistance des données)
+# ─────────────────────────────────────────────
+volumes:
+  postgres_data:
+  mosquitto_data:
+  mosquitto_log:
+
+# ─────────────────────────────────────────────
+# Réseau interne partagé entre les services
+# ─────────────────────────────────────────────
+networks:
+  futurekawa_net:
+    driver: bridge
