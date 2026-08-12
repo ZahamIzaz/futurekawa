@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { LotStatus } from '@prisma/client';
 import prisma from '../prisma';
+import { checkExpiredLots } from '../lotExpiryService';
 
 const router = Router();
 
@@ -82,6 +83,20 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
     console.error('[api] POST /lots :', err);
+    res.status(500).json({ error: 'Erreur interne serveur.' });
+  }
+});
+
+// ─── POST /api/lots/check-expiry ──────────────────────────────────────────────
+// Déclenche manuellement la vérification de péremption (utile pour les tests).
+// Note : ce chemin fixe DOIT être défini avant /:id pour éviter tout conflit.
+
+router.post('/check-expiry', async (_req: Request, res: Response) => {
+  try {
+    const expiredCount = await checkExpiredLots();
+    res.json({ message: 'Vérification effectuée.', expiredCount });
+  } catch (err) {
+    console.error('[api] POST /lots/check-expiry :', err);
     res.status(500).json({ error: 'Erreur interne serveur.' });
   }
 });

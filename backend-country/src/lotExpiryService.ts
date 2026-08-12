@@ -1,0 +1,72 @@
+import prisma from './prisma';
+
+const EXPIRY_DAYS = 365;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Détecte les lots dont la storageDate dépasse EXPIRY_DAYS jours.
+//
+// Pour chaque lot concerné :
+//   1. Met à jour son statut à EXPIRED
+//   2. Crée une alerte LOT_EXPIRED si aucune n'existe déjà pour ce lot
+//
+// Retourne le nombre de lots nouvellement marqués comme expirés.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function checkExpiredLots(): Promise<number> {
+  const now        = new Date();
+  const cutoffDate = new Date(now.getTime() - EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+
+  const expiredLots = await prisma.lot.findMany({
+    where: {
+      storageDate: { lt: cutoffDate },
+      status:      { not: 'EXPIRED' },
+    },
+  });
+
+  if (expiredLots.length === 0) return 0;
+
+  let newlyExpiredCount = 0;
+
+  for (const lot of expiredLots) {
+    const daysStored = Math.floor(
+      (now.getTime() - lot.storageDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    // 1. Mettre à jour le statut du lot
+    await prisma.lot.update({
+      where: { id: lot.id },
+      data:  { status: 'EXPIRED' },
+    });
+
+    // 2. Créer l'alerte seulement s'il n'en existe pas déjà une pour ce lot
+    const existingAlert = await prisma.alert.findFirst({
+      where: { type: 'LOT_EXPIRED', lotId: lot.id },
+    });
+
+    if (!existingAlert) {
+      await prisma.alert.create({
+        data: {
+          warehouseId:   lot.warehouseId,
+          countryCode:   lot.countryCode,
+          type:          'LOT_EXPIRED',
+          message:       `Lot stocké depuis ${daysStored} jours (limite : ${EXPIRY_DAYS} jours)`,
+          measuredValue: daysStored,
+          minAllowed:    0,
+          maxAllowed:    EXPIRY_DAYS,
+          lotId:         lot.id,
+        },
+      });
+      console.log(
+        `[expiry] LOT_EXPIRED créé — lot ${lot.id} (${lot.warehouseId}) : ${daysStored} jours`
+      );
+      newlyExpiredCount++;
+    }
+  }
+
+  console.log(
+    `[expiry] Vérification terminée : ${newlyExpiredCount} nouveau(x) lot(s) expiré(s) ` +
+    `(${expiredLots.length} lot(s) total dépassant ${EXPIRY_DAYS} jours)`
+  );
+
+  return newlyExpiredCount;
+}

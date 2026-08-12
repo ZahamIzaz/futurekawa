@@ -41,6 +41,7 @@ model Lot {
 enum AlertType {
   TEMPERATURE
   HUMIDITY
+  LOT_EXPIRED
 }
 
 model Alert {
@@ -54,7 +55,9 @@ model Alert {
   maxAllowed    Float
   createdAt     DateTime  @default(now())
   resolvedAt    DateTime?
+  lotId         String?   // renseigné uniquement pour les alertes LOT_EXPIRED
 
   // Index composite pour la recherche d'alertes actives (resolvedAt IS NULL)
   @@index([warehouseId, type, resolvedAt])
+  @@index([lotId, type])
 }
