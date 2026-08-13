@@ -31,22 +31,24 @@ pipeline {
         }
 
         // ─── 2. Installation des dépendances ─────────────────────────────────
-        // npm ci garantit des installations reproductibles (utilise package-lock.json)
+        // npm install est utilisé ici car les package-lock.json ont été générés sur Windows
+        // et ne contiennent pas les optionalDependencies Linux d'esbuild (vitest 4.x).
+        // En production avec un runner Linux natif, régénérer les lock files et utiliser npm ci.
         stage('Install') {
             parallel {
                 stage('backend-country') {
                     steps {
-                        dir('backend-country') { sh 'npm ci' }
+                        dir('backend-country') { sh 'npm install --prefer-offline 2>&1 || npm install' }
                     }
                 }
                 stage('backend-central') {
                     steps {
-                        dir('backend-central') { sh 'npm ci' }
+                        dir('backend-central') { sh 'npm install --prefer-offline 2>&1 || npm install' }
                     }
                 }
                 stage('frontend') {
                     steps {
-                        dir('frontend') { sh 'npm ci' }
+                        dir('frontend') { sh 'npm install --prefer-offline 2>&1 || npm install' }
                     }
                 }
             }
