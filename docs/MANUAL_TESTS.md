@@ -337,6 +337,12 @@ Invoke-RestMethod "http://localhost:3001/api/measurements" |
 | **Objectif** | Vérifier qu'une humidité hors plage déclenche une alerte `HUMIDITY` |
 | **Préconditions** | MT-08 OK |
 
+**⚠ Arrêter le simulateur IoT avant ce test** pour éviter toute interférence entre MT-09 et MT-11. Le redémarrer impérativement à la fin de MT-11.
+
+```powershell
+docker compose stop iot-simulator
+```
+
 **Seuils configurés :** `minAllowed = 53`, `maxAllowed = 57`
 
 **Commande :**
@@ -385,7 +391,7 @@ Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true" |
 | **ID** | MT-10 |
 | **Catégorie** | Alertes / Métier |
 | **Objectif** | Vérifier qu'une seconde valeur hors plage ne crée pas de doublon |
-| **Préconditions** | MT-09 OK (alerte HUMIDITY active) |
+| **Préconditions** | MT-09 OK (alerte HUMIDITY active), simulateur IoT **arrêté** |
 
 **Commande :**
 ```powershell
@@ -401,16 +407,16 @@ $payload | docker compose exec -T mosquitto mosquitto_pub `
 
 Start-Sleep 3
 $alerts = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true"
-($alerts.data | Where-Object { $_.type -eq "HUMIDITY" }).Count
+$humidAlerts = $alerts.data | Where-Object { $_.type -eq "HUMIDITY" -and $_.warehouseId -eq "BR-WH-01" }
+Write-Host "Nombre d'alertes HUMIDITY actives pour BR-WH-01 : $($humidAlerts.Count)"
+$humidAlerts | ConvertTo-Json -Depth 4
 ```
 
-**Résultat attendu :** exactement **1** alerte HUMIDITY active pour BR-WH-01.
+**Résultat attendu :** exactement **1** alerte HUMIDITY active pour BR-WH-01 (pas de doublon).
 
-**Résultat obtenu :** 1 alerte HUMIDITY active (`measuredValue` mis à jour à `52.2`).
+> Le simulateur IoT étant arrêté, aucune mesure externe ne peut résoudre l'alerte entre les deux publications. La logique métier garantit qu'une seule alerte HUMIDITY reste active par entrepôt : la première est résolue et une nouvelle est créée avec la valeur actualisée.
 
-> L'ancienne alerte `52.5` a été résolue et une nouvelle créée — comportement conforme à la logique métier (réinitialisation de l'alerte à chaque nouvelle mesure hors plage).
-
-**Statut : ✅ OK**
+**Statut : À exécuter**
 
 ---
 
@@ -421,7 +427,7 @@ $alerts = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?acti
 | **ID** | MT-11 |
 | **Catégorie** | Alertes / Métier |
 | **Objectif** | Vérifier qu'une valeur dans la plage résout l'alerte HUMIDITY |
-| **Préconditions** | MT-10 OK (alerte HUMIDITY active) |
+| **Préconditions** | MT-10 OK (alerte HUMIDITY active), simulateur IoT **arrêté** |
 
 **Commande :**
 ```powershell
@@ -440,11 +446,22 @@ Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true" |
   ConvertTo-Json -Depth 5
 ```
 
-**Résultat attendu :** aucune alerte `HUMIDITY` dans `active=true` ; `resolvedAt` non nul.
+**Résultat attendu :** aucune alerte `HUMIDITY` dans `?active=true` ; `resolvedAt` non nul sur l'alerte précédente.
 
-**Résultat obtenu :** l'alerte HUMIDITY a `resolvedAt = "2026-08-13T14:53:56.776Z"` et n'apparaît plus dans `?active=true`.
+```powershell
+# Vérifier resolvedAt sur l'historique :
+Invoke-RestMethod "http://localhost:3001/api/alerts" |
+  Select-Object -ExpandProperty data |
+  Where-Object { $_.type -eq "HUMIDITY" } |
+  Select-Object -First 1 | ConvertTo-Json -Depth 4
+```
 
-**Statut : ✅ OK**
+**⚠ Redémarrer impérativement le simulateur IoT après ce test :**
+```powershell
+docker compose start iot-simulator
+```
+
+**Statut : À exécuter**
 
 ---
 
@@ -675,7 +692,11 @@ HTTP/1.1 503 Service Unavailable
 **Étapes :**
 1. Ouvrir `http://localhost:5173` dans le navigateur.
 2. Vérifier l'affichage du pays **Brésil**.
-3. Vérifier les indicateurs (température, humidité, alertes actives).
+3. Vérifier les indicateurs du dashboard :
+   - **Total lots** (nombre total de lots BRA)
+   - **Conformes** (lots au statut `COMPLIANT`)
+   - **Expirés** (lots au statut `EXPIRED`)
+   - **Alertes actives** (nombre d'alertes non résolues)
 4. Vérifier que les lots sont affichés dans l'ordre `storageDate ASC` (FIFO).
 5. Vérifier les statuts : **Conforme** (COMPLIANT), **Expiré** (EXPIRED).
 6. Vérifier la section Alertes actives.
@@ -770,8 +791,8 @@ HTTP/1.1 503 Service Unavailable
 | MT-07 | Historique mesures d'un lot | API / Données | ✅ OK |
 | MT-08 | Publication MQTT manuelle | IoT / MQTT | ✅ OK |
 | MT-09 | Création alerte HUMIDITY | Alertes | ✅ OK |
-| MT-10 | Non-duplication alerte | Alertes | ✅ OK |
-| MT-11 | Résolution alerte | Alertes | ✅ OK |
+| MT-10 | Non-duplication alerte | Alertes | À exécuter |
+| MT-11 | Résolution alerte | Alertes | À exécuter |
 | MT-12 | Alerte température | Alertes | ✅ OK |
 | MT-13 | Email d'alerte MailHog | Email | ✅ OK |
 | MT-14 | Contrôle expiration lots | Métier | ✅ OK |
