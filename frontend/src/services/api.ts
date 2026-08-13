@@ -10,6 +10,16 @@ async function get<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface CreateLotPayload {
+  warehouseId: string;
+  countryCode: string;
+  storageDate: string; // ISO 8601
+}
+
+// ─── Lectures ─────────────────────────────────────────────────────────────────
+
 export async function fetchCountries(): Promise<Country[]> {
   const res = await get<{ data: Country[] }>('/api/countries');
   return res.data;
@@ -41,4 +51,32 @@ export async function fetchAlerts(
   const qs  = activeOnly ? '?active=true' : '';
   const res = await get<{ data: Alert[] }>(`/api/countries/${countryCode}/alerts${qs}`);
   return res.data;
+}
+
+// ─── Créations ────────────────────────────────────────────────────────────────
+
+export async function createLot(
+  countryCode: string,
+  payload:     CreateLotPayload,
+): Promise<Lot> {
+  const response = await fetch(
+    `${BASE_URL}/api/countries/${countryCode}/lots`,
+    {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    },
+  );
+
+  const data: unknown = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const msg =
+      typeof data === 'object' && data !== null && 'error' in data
+        ? String((data as { error: unknown }).error)
+        : `Erreur HTTP ${response.status}`;
+    throw new Error(msg);
+  }
+
+  return data as Lot;
 }

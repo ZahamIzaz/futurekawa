@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { COUNTRIES, getCountry } from '../config/countries';
-import { httpGet, BackendUnavailableError, BackendHttpError } from '../httpClient';
+import { httpGet, httpPost, BackendUnavailableError, BackendHttpError } from '../httpClient';
 
 const router = Router();
 
@@ -50,7 +50,43 @@ router.get('/', (_req: Request, res: Response) => {
   const data = COUNTRIES.map(({ code, name }) => ({ code, name }));
   res.json({ data });
 });
+// ─── Helper : proxy POST avec gestion d'erreurs uniforme ──────────────────────
 
+async function proxyPost(
+  req:         Request,
+  res:         Response,
+  backendUrl:  string,
+  path:        string,
+  countryCode: string,
+): Promise<void> {
+  const url = `${backendUrl}${path}`;
+  console.log(`[proxy] POST ${url}`);
+
+  try {
+    const data = await httpPost(url, req.body);
+    res.status(201).json(data);
+  } catch (err) {
+    if (err instanceof BackendUnavailableError) {
+      console.error(`[proxy] Backend pays indisponible — ${countryCode} : ${url}`);
+      res.status(503).json({ error: 'Backend pays indisponible', countryCode });
+    } else if (err instanceof BackendHttpError) {
+      res.status(err.status).json(err.body);
+    } else {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[proxy] Erreur inattendue : ${message}`);
+      res.status(500).json({ error: 'Erreur interne serveur.' });
+    }
+  }
+}
+
+// ─── POST /api/countries/:countryCode/lots ────────────────────────────────────
+
+router.post('/:countryCode/lots', async (req: Request, res: Response) => {
+  const { countryCode } = req.params;
+  const backendUrl = resolveCountryUrl(countryCode, res);
+  if (!backendUrl) return;
+  await proxyPost(req, res, backendUrl, '/api/lots', countryCode);
+});
 // ─── GET /api/countries/:countryCode/lots ─────────────────────────────────────
 
 router.get('/:countryCode/lots', async (req: Request, res: Response) => {

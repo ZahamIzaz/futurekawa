@@ -52,3 +52,34 @@ export async function httpGet<T = unknown>(url: string): Promise<T> {
     throw new BackendUnavailableError(url);
   }
 }
+
+// ─── Requête POST avec timeout ────────────────────────────────────────────────
+
+export async function httpPost<T = unknown>(url: string, body: unknown): Promise<T> {
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+      signal:  controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    const data: unknown = await response.json();
+
+    if (!response.ok) {
+      throw new BackendHttpError(response.status, data);
+    }
+
+    return data as T;
+  } catch (err) {
+    clearTimeout(timeoutId);
+
+    if (err instanceof BackendHttpError) throw err;
+
+    throw new BackendUnavailableError(url);
+  }
+}

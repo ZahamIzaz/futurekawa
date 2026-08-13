@@ -8,6 +8,7 @@ import {
 import type { Alert, Country, Lot, Measurement } from './types';
 import AlertsPanel        from './components/AlertsPanel';
 import CountrySelector    from './components/CountrySelector';
+import CreateLotForm      from './components/CreateLotForm';
 import LotDetails         from './components/LotDetails';
 import LotsTable          from './components/LotsTable';
 import MeasurementsCharts from './components/MeasurementsCharts';
@@ -25,6 +26,8 @@ export default function App() {
   const [alerts,          setAlerts]          = useState<Alert[]>([]);
   const [loading,         setLoading]         = useState(false);
   const [error,           setError]           = useState<string | null>(null);
+  const [showCreateForm,  setShowCreateForm]  = useState(false);
+  const [successMessage,  setSuccessMessage]  = useState<string | null>(null);
 
   // Ref to read selectedLot inside the interval without stale closures
   const selectedLotRef = useRef<Lot | null>(null);
@@ -103,6 +106,15 @@ export default function App() {
     return () => clearInterval(id);
   }, [selectedCountry]);
 
+  const countryName = countries.find((c) => c.code === selectedCountry)?.name ?? selectedCountry;
+
+  const handleLotCreated = useCallback(async () => {
+    setShowCreateForm(false);
+    setSuccessMessage('Lot créé avec succès.');
+    await loadCountryData(selectedCountry, false);
+    setTimeout(() => setSuccessMessage(null), 5_000);
+  }, [selectedCountry, loadCountryData]);
+
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="app">
@@ -134,7 +146,18 @@ export default function App() {
             <SummaryCards lots={lots} alertsCount={alerts.length} />
 
             <section className="section">
-              <h2>Lots – ordre FIFO</h2>
+              <div className="section-header">
+                <h2>Lots – ordre FIFO</h2>
+                <button
+                  className="btn-add"
+                  onClick={() => setShowCreateForm(true)}
+                >
+                  + Ajouter un lot
+                </button>
+              </div>
+              {successMessage && (
+                <div className="success-message">{successMessage}</div>
+              )}
               <LotsTable
                 lots={lots}
                 selectedId={selectedLot?.id ?? null}
@@ -163,6 +186,15 @@ export default function App() {
           </>
         )}
       </main>
+
+      {showCreateForm && (
+        <CreateLotForm
+          countryCode={selectedCountry}
+          countryName={countryName}
+          onClose={() => setShowCreateForm(false)}
+          onSuccess={handleLotCreated}
+        />
+      )}
     </div>
   );
 }

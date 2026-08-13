@@ -3,6 +3,14 @@ import { sendAlertEmail } from './services/email.service';
 
 const EXPIRY_DAYS = 365;
 
+/**
+ * Fonction pure testable sans Prisma.
+ * Retourne true si storageDate dépasse EXPIRY_DAYS jours avant now (strictement).
+ */
+export function isLotExpired(storageDate: Date, now: Date): boolean {
+  return now.getTime() - storageDate.getTime() > EXPIRY_DAYS * 24 * 60 * 60 * 1000;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Détecte les lots dont la storageDate dépasse EXPIRY_DAYS jours.
 //
