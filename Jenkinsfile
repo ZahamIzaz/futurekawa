@@ -42,6 +42,7 @@ pipeline {
                         dir('backend-country') {
                             sh 'npm install'
                             sh 'chmod +x node_modules/.bin/* 2>/dev/null || true'
+                            sh 'npx prisma generate'
                         }
                     }
                 }
@@ -50,6 +51,7 @@ pipeline {
                         dir('backend-central') {
                             sh 'npm install'
                             sh 'chmod +x node_modules/.bin/* 2>/dev/null || true'
+                            sh 'npx prisma generate'
                         }
                     }
                 }
