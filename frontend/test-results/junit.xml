@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="19" failures="0" errors="0" time="1.1236854">
+    <testsuite name="src/__tests__/AlertsPanel.test.tsx" timestamp="2026-08-13T13:37:32.627Z" hostname="MCSWKS01006" tests="4" failures="0" errors="0" skipped="0" time="0.1370303">
+        <testcase classname="src/__tests__/AlertsPanel.test.tsx" name="AlertsPanel &gt; F7a – affiche &quot;Aucune alerte&quot; si liste vide" time="0.0491293">
+        </testcase>
+        <testcase classname="src/__tests__/AlertsPanel.test.tsx" name="AlertsPanel &gt; F7b – affiche une alerte TEMPERATURE avec les valeurs" time="0.0631211">
+        </testcase>
+        <testcase classname="src/__tests__/AlertsPanel.test.tsx" name="AlertsPanel &gt; F7c – affiche une alerte LOT_EXPIRED avec le lotId" time="0.0120814">
+        </testcase>
+        <testcase classname="src/__tests__/AlertsPanel.test.tsx" name="AlertsPanel &gt; F7d – affiche plusieurs alertes" time="0.0089646">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/__tests__/App.test.tsx" timestamp="2026-08-13T13:37:32.634Z" hostname="MCSWKS01006" tests="2" failures="0" errors="0" skipped="0" time="0.3187653">
+        <testcase classname="src/__tests__/App.test.tsx" name="App &gt; F1 – charge et affiche les pays au démarrage" time="0.1342675">
+        </testcase>
+        <testcase classname="src/__tests__/App.test.tsx" name="App &gt; F8 – affiche les lots après sélection d&apos;un pays" time="0.1809186">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/__tests__/CreateLotForm.test.tsx" timestamp="2026-08-13T13:37:32.635Z" hostname="MCSWKS01006" tests="4" failures="0" errors="0" skipped="0" time="0.3376914">
+        <testcase classname="src/__tests__/CreateLotForm.test.tsx" name="CreateLotForm &gt; F9a – affiche le formulaire avec le pays pré-rempli" time="0.0640275">
+        </testcase>
+        <testcase classname="src/__tests__/CreateLotForm.test.tsx" name="CreateLotForm &gt; F9b – affiche une erreur si warehouseId est vide à la soumission" time="0.1920106">
+        </testcase>
+        <testcase classname="src/__tests__/CreateLotForm.test.tsx" name="CreateLotForm &gt; F9c – soumet le formulaire et appelle onSuccess" time="0.0324985">
+        </testcase>
+        <testcase classname="src/__tests__/CreateLotForm.test.tsx" name="CreateLotForm &gt; F9d – affiche un message d&apos;erreur si l&apos;API échoue" time="0.0452706">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/__tests__/LotsTable.test.tsx" timestamp="2026-08-13T13:37:32.637Z" hostname="MCSWKS01006" tests="5" failures="0" errors="0" skipped="0" time="0.145207">
+        <testcase classname="src/__tests__/LotsTable.test.tsx" name="LotsTable &gt; F3 – affiche le message vide si aucun lot" time="0.0425661">
+        </testcase>
+        <testcase classname="src/__tests__/LotsTable.test.tsx" name="LotsTable &gt; F4a – affiche les lots dans le tableau" time="0.0540927">
+        </testcase>
+        <testcase classname="src/__tests__/LotsTable.test.tsx" name="LotsTable &gt; F4b – surligne le lot sélectionné (row-selected)" time="0.0133777">
+        </testcase>
+        <testcase classname="src/__tests__/LotsTable.test.tsx" name="LotsTable &gt; F4c – appelle onSelect avec le bon lot au clic" time="0.0204209">
+        </testcase>
+        <testcase classname="src/__tests__/LotsTable.test.tsx" name="LotsTable &gt; F4d – affiche les badges de statut corrects" time="0.0103753">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/__tests__/MeasurementsCharts.test.tsx" timestamp="2026-08-13T13:37:32.639Z" hostname="MCSWKS01006" tests="2" failures="0" errors="0" skipped="0" time="0.1217578">
+        <testcase classname="src/__tests__/MeasurementsCharts.test.tsx" name="MeasurementsCharts &gt; F5 – affiche le message vide si aucune mesure" time="0.054753">
+        </testcase>
+        <testcase classname="src/__tests__/MeasurementsCharts.test.tsx" name="MeasurementsCharts &gt; F6 – rend les deux graphiques quand des mesures sont disponibles" time="0.0615643">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/__tests__/SummaryCards.test.tsx" timestamp="2026-08-13T13:37:32.640Z" hostname="MCSWKS01006" tests="2" failures="0" errors="0" skipped="0" time="0.0632336">
+        <testcase classname="src/__tests__/SummaryCards.test.tsx" name="SummaryCards &gt; F2a – affiche les compteurs corrects" time="0.0519839">
+        </testcase>
+        <testcase classname="src/__tests__/SummaryCards.test.tsx" name="SummaryCards &gt; F2b – affiche 0 lots et 0 alertes quand liste vide" time="0.0072439">
+        </testcase>
+    </testsuite>
+</testsuites>

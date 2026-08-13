@@ -1,0 +1,54 @@
+- generic [active] [ref=f13e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f13e2]:
+    - generic [ref=f13e4]:
+      - link "Jenkins" [ref=f13e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f13e8]:
+        - list [ref=f13e9]:
+          - listitem [ref=f13e10]:
+            - text: /
+            - generic [ref=f13e11]: Script Console
+    - generic [ref=f13e12]:
+      - button "Search" [ref=f13e13] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f13e18] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f13e24] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f13e30]:
+    - heading "Script Console" [level=1] [ref=f13e31]
+    - paragraph [ref=f13e32]:
+      - text: Vous pouvez saisir ici un
+      - link "script Groovy" [ref=f13e33] [cursor=pointer]:
+        - /url: https://www.groovy-lang.org
+      - text: quelconque pour l’exécuter sur le serveur.Utile pour diagnostiquer et résoudre des problèmes.Utilisez la commande "println" pour voir la sortie (si vous utilisez
+      - code [ref=f13e34]: System.out
+      - text: ", cela ira vers la sortie standard du serveur, qui est plus complexe à retrouver.) Par exemple :"
+    - generic [ref=f13e35]: println(Jenkins.instance.pluginManager.plugins)
+    - paragraph [ref=f13e36]:
+      - text: Toutes les classes de tous les plugins sont visibles.
+      - code [ref=f13e37]: jenkins.*
+      - text: ","
+      - code [ref=f13e38]: jenkins.model.*
+      - text: ","
+      - code [ref=f13e39]: hudson.*
+      - text: ", et"
+      - code [ref=f13e40]: hudson.model.*
+      - text: sont pré-importées.
+    - generic [ref=f13e41]:
+      - generic [ref=f13e42]:
+        - textbox [ref=f13e43]
+        - generic [ref=f13e46]:
+          - generic [ref=f13e47]: "1"
+          - generic [ref=f13e50]: "import jenkins.model.Jenkins; import org.jenkinsci.plugins.workflow.job.WorkflowJob; import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition; import hudson.plugins.git.GitSCM; import hudson.plugins.git.BranchSpec; import hudson.plugins.git.UserRemoteConfig; def j = Jenkins.instance; def job = j.getItemByFullName('futurekawa') as WorkflowJob; def scm = new GitSCM([new UserRemoteConfig('https://github.com/ZahamIzaz/futurekawa.git', null, null, null)], [new BranchSpec('*/main')], false, [], null, null, []); def def1 = new CpsScmFlowDefinition(scm, 'Jenkinsfile'); def1.setLightweight(true); job.definition = def1; job.save(); println \"OK: job configure Pipeline from SCM\""
+      - button "Exécuter" [ref=f13e56] [cursor=pointer]
+    - heading [level=2] [ref=f13e57]:
+      - text: Résultat
+      - button "Click to copy" [ref=f13e59] [cursor=pointer]
+    - generic [ref=f13e63]: "OK: job configure Pipeline from SCM"
+  - contentinfo [ref=f13e64]:
+    - generic [ref=f13e67]:
+      - link "REST API" [ref=f13e68] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f13e69] [cursor=pointer]

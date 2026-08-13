@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="12" failures="0" errors="0" time="0.079097">
+    <testsuite name="src/__tests__/countries.test.ts" timestamp="2026-08-13T13:37:10.329Z" hostname="MCSWKS01006" tests="12" failures="0" errors="0" skipped="0" time="0.079097">
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries &gt; E1 – retourne la liste des pays avec data" time="0.0232784">
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/lots &gt; E2 – proxifie vers le backend pays et retourne le résultat" time="0.00689">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/lots
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/lots – backend indisponible &gt; E3 – retourne 503 si BackendUnavailableError" time="0.0038812">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/lots
+
+            </system-out>
+            <system-err>
+[proxy] Backend pays indisponible — BRA : http://backend-country:3001/api/lots
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/XXX/lots – pays inconnu &gt; E4 – retourne 404 pour un pays non configuré" time="0.0027009">
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/lots/lot-001 &gt; E5 – proxifie vers /api/lots/:lotId" time="0.0034238">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/lots/lot-001
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/lots/lot-001 &gt; E6 – transmet le 404 du backend pays si lot introuvable" time="0.0044637">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/lots/unknown
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/lots/lot-001/measurements &gt; E7 – proxifie vers /api/lots/:lotId/measurements" time="0.0028255">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/lots/lot-001/measurements
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/alerts &gt; E8 – proxifie vers /api/alerts" time="0.0029706">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/alerts
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="POST /api/countries/BRA/lots &gt; E9 – proxifie la création de lot et retourne 201" time="0.0126436">
+            <system-out>
+[proxy] POST http://backend-country:3001/api/lots
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/alerts?active=true &gt; E8b – transmet active=true dans l&apos;URL envoyée au backend pays" time="0.0062399">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/alerts?active=true
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /api/countries/BRA/alerts?active=true &gt; E8c – sans active=true, ne transmet pas le paramètre" time="0.0035255">
+            <system-out>
+[proxy] GET http://backend-country:3001/api/alerts
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/__tests__/countries.test.ts" name="GET /health &gt; retourne 200 avec status ok et service backend-central" time="0.0043712">
+        </testcase>
+    </testsuite>
+</testsuites>

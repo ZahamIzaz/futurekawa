@@ -1,0 +1,61 @@
+- generic [active] [ref=f15e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f15e2]:
+    - generic [ref=f15e4]:
+      - link "Jenkins" [ref=f15e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f15e8]:
+        - list [ref=f15e9]:
+          - listitem [ref=f15e10]:
+            - text: /
+            - generic [ref=f15e11]: futurekawa
+    - generic [ref=f15e12]:
+      - button "Search" [ref=f15e13] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f15e18] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f15e24] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f15e29]:
+    - generic [ref=f15e30]:
+      - generic [ref=f15e31]:
+        - link [ref=f15e34]:
+          - /url: /job/futurekawa/
+        - link [ref=f15e41] [cursor=pointer]:
+          - /url: /job/futurekawa/changes
+        - link [ref=f15e47] [cursor=pointer]:
+          - /url: /job/futurekawa/build?delay=0sec
+        - link [ref=f15e53] [cursor=pointer]:
+          - /url: /job/futurekawa/configure
+        - link "Supprimer Pipeline" [ref=f15e61] [cursor=pointer]:
+          - /url: "#"
+        - link [ref=f15e69] [cursor=pointer]:
+          - /url: /job/futurekawa/workflow-stage
+        - link [ref=f15e76] [cursor=pointer]:
+          - /url: /job/futurekawa/multi-pipeline-graph
+        - link [ref=f15e83] [cursor=pointer]:
+          - /url: /job/futurekawa/confirm-rename
+        - link [ref=f15e91] [cursor=pointer]:
+          - /url: /job/futurekawa/pipeline-syntax
+      - generic [ref=f15e98]:
+        - generic [ref=f15e99]:
+          - link "Builds" [ref=f15e100] [cursor=pointer]:
+            - /url: /job/futurekawa/buildTimeTrend
+          - button "More actions" [ref=f15e104] [cursor=pointer]
+        - generic [ref=f15e109]: No builds
+    - generic [ref=f15e112]:
+      - generic [ref=f15e113]:
+        - heading "futurekawa" [level=1] [ref=f15e115]
+        - link "Ajouter une description" [ref=f15e117] [cursor=pointer]:
+          - /url: editDescription
+      - table
+      - generic [ref=f15e125]:
+        - heading "Stage View" [level=2] [ref=f15e126]
+        - generic [ref=f15e127]: No data available. This Pipeline has not yet run.
+      - heading "Liens permanents" [level=2] [ref=f15e128]
+      - list
+  - contentinfo [ref=f15e129]:
+    - generic [ref=f15e132]:
+      - link "REST API" [ref=f15e133] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f15e134] [cursor=pointer]

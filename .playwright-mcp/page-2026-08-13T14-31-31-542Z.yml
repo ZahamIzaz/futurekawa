@@ -1,0 +1,28 @@
+- generic [active] [ref=f27e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f27e2]:
+    - generic [ref=f27e4]:
+      - link "Jenkins" [ref=f27e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f27e8]:
+        - list [ref=f27e9]:
+          - listitem [ref=f27e10]:
+            - text: /
+            - link "futurekawa" [ref=f27e11] [cursor=pointer]:
+              - /url: /job/futurekawa/
+            - generic "dropdown menu for futurekawa" [ref=f27e12] [cursor=pointer]
+    - generic [ref=f27e15]:
+      - button "Search" [ref=f27e16] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f27e21] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f27e27] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f27e33]:
+    - paragraph [ref=f27e34]: Vous devez utiliser la méthode "POST" pour déclencher des builds (depuis des scripts, vous pouvez à la place émettre un token d'authentification, ou vous authentifier avec un jeton d'API) Si vous voyez cette page, la raison est peut-être qu'un plugin expose un lien "GET" ; veuillez reporter un problème pour ce plugin.
+    - button "Proceed" [ref=f27e36]
+  - contentinfo [ref=f27e37]:
+    - generic [ref=f27e41]:
+      - link "REST API" [ref=f27e42] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f27e43] [cursor=pointer]

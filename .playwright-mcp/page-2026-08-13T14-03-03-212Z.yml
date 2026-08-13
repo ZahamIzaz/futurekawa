@@ -1,0 +1,261 @@
+- generic [active] [ref=f21e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f21e2]:
+    - generic [ref=f21e4]:
+      - link "Jenkins" [ref=f21e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f21e8]:
+        - list [ref=f21e9]:
+          - listitem [ref=f21e10]:
+            - text: /
+            - generic [ref=f21e11]: futurekawa
+    - generic [ref=f21e12]:
+      - button "Search" [ref=f21e13] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f21e18] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f21e24] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f21e29]:
+    - generic [ref=f21e30]:
+      - generic [ref=f21e31]:
+        - link [ref=f21e34]:
+          - /url: /job/futurekawa/
+        - link [ref=f21e41] [cursor=pointer]:
+          - /url: /job/futurekawa/changes
+        - link [ref=f21e47] [cursor=pointer]:
+          - /url: /job/futurekawa/build?delay=0sec
+        - link [ref=f21e53] [cursor=pointer]:
+          - /url: /job/futurekawa/configure
+        - link "Supprimer Pipeline" [ref=f21e61] [cursor=pointer]:
+          - /url: "#"
+        - link [ref=f21e69] [cursor=pointer]:
+          - /url: /job/futurekawa/workflow-stage
+        - link [ref=f21e76] [cursor=pointer]:
+          - /url: /job/futurekawa/multi-pipeline-graph
+        - link [ref=f21e83] [cursor=pointer]:
+          - /url: /job/futurekawa/confirm-rename
+        - link [ref=f21e91] [cursor=pointer]:
+          - /url: /job/futurekawa/pipeline-syntax
+      - generic [ref=f21e98]:
+        - generic [ref=f21e99]:
+          - link "Builds" [ref=f21e100] [cursor=pointer]:
+            - /url: /job/futurekawa/buildTimeTrend
+          - button "More actions" [ref=f21e104] [cursor=pointer]
+        - generic [ref=f21e109]:
+          - searchbox "Filter" [ref=f21e112]
+          - generic [ref=f21e119]:
+            - generic [ref=f21e120]: Today
+            - generic [ref=f21e121] [cursor=pointer]:
+              - link "En échec" [ref=f21e122]:
+                - /url: /job/futurekawa/2/console
+              - link "#2 13:58" [ref=f21e127]:
+                - /url: /job/futurekawa/2/
+                - text: "#2"
+                - generic "Took 18 s" [ref=f21e129]: 13:58
+              - button [ref=f21e130]
+            - generic [ref=f21e133] [cursor=pointer]:
+              - link "En échec" [ref=f21e134]:
+                - /url: /job/futurekawa/1/console
+              - link "#1 13:53" [ref=f21e139]:
+                - /url: /job/futurekawa/1/
+                - text: "#1"
+                - generic "Took 47 s" [ref=f21e141]: 13:53
+              - button [ref=f21e142]
+    - generic [ref=f21e145]:
+      - generic [ref=f21e146]:
+        - generic [ref=f21e147]:
+          - link [ref=f21e148] [cursor=pointer]:
+            - /url: /job/futurekawa/2/
+          - heading "futurekawa" [level=1] [ref=f21e152]
+        - link "Ajouter une description" [ref=f21e154] [cursor=pointer]:
+          - /url: editDescription
+      - table
+      - generic [ref=f21e162]:
+        - heading "Stage View" [level=2] [ref=f21e163]
+        - table [ref=f21e166]:
+          - rowgroup [ref=f21e186]:
+            - row [ref=f21e187]:
+              - columnheader [ref=f21e188]
+              - 'columnheader "Declarative: Checkout SCM" [ref=f21e189]'
+              - columnheader "Checkout" [ref=f21e190]
+              - columnheader "Install" [ref=f21e191]
+              - columnheader "backend-country" [ref=f21e192]
+              - columnheader "backend-central" [ref=f21e193]
+              - columnheader "frontend" [ref=f21e194]
+              - columnheader "Build" [ref=f21e195]
+              - columnheader "backend-country" [ref=f21e196]
+              - columnheader "backend-central" [ref=f21e197]
+              - columnheader "frontend" [ref=f21e198]
+              - columnheader "Tests" [ref=f21e199]
+              - columnheader "backend-country (37)" [ref=f21e200]
+              - columnheader "backend-central (12)" [ref=f21e201]
+              - columnheader "frontend (19)" [ref=f21e202]
+              - columnheader "Quality" [ref=f21e203]
+              - columnheader "Docker Build" [ref=f21e204]
+              - columnheader "Archive" [ref=f21e205]
+              - 'columnheader "Declarative: Post Actions" [ref=f21e206]'
+          - rowgroup [ref=f21e207]:
+            - row [ref=f21e208]:
+              - cell "Average stage times:" [ref=f21e209]
+              - cell "9s" [ref=f21e211]
+              - cell "3s" [ref=f21e234]
+              - cell "146ms" [ref=f21e257]
+              - cell "4s" [ref=f21e280]
+              - cell "2s" [ref=f21e303]
+              - cell "1s" [ref=f21e326]
+              - cell "127ms" [ref=f21e349]
+              - cell "0ms" [ref=f21e372]
+              - cell "0ms" [ref=f21e395]
+              - cell "0ms" [ref=f21e418]
+              - cell "132ms" [ref=f21e441]
+              - cell "221ms" [ref=f21e464]
+              - cell "219ms" [ref=f21e487]
+              - cell "217ms" [ref=f21e510]
+              - cell "63ms" [ref=f21e533]
+              - cell "65ms" [ref=f21e556]
+              - cell "69ms" [ref=f21e579]
+              - cell "345ms" [ref=f21e602]
+          - rowgroup [ref=f21e625]:
+            - row [ref=f21e626]:
+              - cell "#2 août 13 15:58 1 commit" [ref=f21e627]:
+                - generic [ref=f21e629]:
+                  - link "#2" [ref=f21e632] [cursor=pointer]:
+                    - /url: 2/
+                  - generic [ref=f21e633]:
+                    - generic [ref=f21e634]:
+                      - generic [ref=f21e635]: août 13
+                      - generic [ref=f21e636]: 15:58
+                    - generic [ref=f21e638] [cursor=pointer]:
+                      - strong [ref=f21e639]: "1"
+                      - text: commit
+              - cell "6s" [ref=f21e641]
+              - cell "2s" [ref=f21e647]
+              - cell "172ms" [ref=f21e653]
+              - cell "1s" [ref=f21e659]
+              - cell "1s" [ref=f21e665]
+              - cell "2s" [ref=f21e671]
+              - cell "99ms" [ref=f21e677]
+              - cell "581ms failed" [ref=f21e683]:
+                - generic [ref=f21e685]:
+                  - generic [ref=f21e686]: 581ms
+                  - generic [ref=f21e688]: failed
+              - cell "733ms failed" [ref=f21e690]:
+                - generic [ref=f21e692]:
+                  - generic [ref=f21e693]: 733ms
+                  - generic [ref=f21e695]: failed
+              - cell "759ms failed" [ref=f21e697]:
+                - generic [ref=f21e699]:
+                  - generic [ref=f21e700]: 759ms
+                  - generic [ref=f21e702]: failed
+              - cell "146ms" [ref=f21e704]
+              - cell "275ms failed" [ref=f21e710]:
+                - generic [ref=f21e712]:
+                  - generic [ref=f21e713]: 275ms
+                  - generic [ref=f21e715]: failed
+              - cell "275ms failed" [ref=f21e717]:
+                - generic [ref=f21e719]:
+                  - generic [ref=f21e720]: 275ms
+                  - generic [ref=f21e722]: failed
+              - cell "270ms failed" [ref=f21e724]:
+                - generic [ref=f21e726]:
+                  - generic [ref=f21e727]: 270ms
+                  - generic [ref=f21e729]: failed
+              - cell "66ms failed" [ref=f21e731]:
+                - generic [ref=f21e733]:
+                  - generic [ref=f21e734]: 66ms
+                  - generic [ref=f21e736]: failed
+              - cell "76ms failed" [ref=f21e738]:
+                - generic [ref=f21e740]:
+                  - generic [ref=f21e741]: 76ms
+                  - generic [ref=f21e743]: failed
+              - cell "85ms failed" [ref=f21e745]:
+                - generic [ref=f21e747]:
+                  - generic [ref=f21e748]: 85ms
+                  - generic [ref=f21e750]: failed
+              - cell "293ms" [ref=f21e752]
+            - row [ref=f21e758]:
+              - cell "#1 août 13 15:53 No Changes" [ref=f21e759]:
+                - generic [ref=f21e761]:
+                  - link "#1" [ref=f21e764] [cursor=pointer]:
+                    - /url: 1/
+                  - generic [ref=f21e765]:
+                    - generic [ref=f21e766]:
+                      - generic [ref=f21e767]: août 13
+                      - generic [ref=f21e768]: 15:53
+                    - generic [ref=f21e769]: No Changes
+              - cell "12s" [ref=f21e771]
+              - cell "4s" [ref=f21e777]
+              - cell "120ms" [ref=f21e783]
+              - cell "15s" [ref=f21e789]
+              - cell "7s" [ref=f21e795]
+              - cell "3s failed" [ref=f21e801]:
+                - generic [ref=f21e803]:
+                  - generic [ref=f21e804]: 3s
+                  - generic [ref=f21e806]: failed
+              - cell "155ms" [ref=f21e808]
+              - cell "179ms failed" [ref=f21e814]:
+                - generic [ref=f21e816]:
+                  - generic [ref=f21e817]: 179ms
+                  - generic [ref=f21e819]: failed
+              - cell "180ms failed" [ref=f21e821]:
+                - generic [ref=f21e823]:
+                  - generic [ref=f21e824]: 180ms
+                  - generic [ref=f21e826]: failed
+              - cell "178ms failed" [ref=f21e828]:
+                - generic [ref=f21e830]:
+                  - generic [ref=f21e831]: 178ms
+                  - generic [ref=f21e833]: failed
+              - cell "118ms" [ref=f21e835]
+              - cell "167ms failed" [ref=f21e841]:
+                - generic [ref=f21e843]:
+                  - generic [ref=f21e844]: 167ms
+                  - generic [ref=f21e846]: failed
+              - cell "164ms failed" [ref=f21e848]:
+                - generic [ref=f21e850]:
+                  - generic [ref=f21e851]: 164ms
+                  - generic [ref=f21e853]: failed
+              - cell "164ms failed" [ref=f21e855]:
+                - generic [ref=f21e857]:
+                  - generic [ref=f21e858]: 164ms
+                  - generic [ref=f21e860]: failed
+              - cell "60ms failed" [ref=f21e862]:
+                - generic [ref=f21e864]:
+                  - generic [ref=f21e865]: 60ms
+                  - generic [ref=f21e867]: failed
+              - cell "55ms failed" [ref=f21e869]:
+                - generic [ref=f21e871]:
+                  - generic [ref=f21e872]: 55ms
+                  - generic [ref=f21e874]: failed
+              - cell "54ms failed" [ref=f21e876]:
+                - generic [ref=f21e878]:
+                  - generic [ref=f21e879]: 54ms
+                  - generic [ref=f21e881]: failed
+              - cell "398ms" [ref=f21e883]
+      - heading "Liens permanents" [level=2] [ref=f21e889]
+      - list [ref=f21e890]:
+        - listitem [ref=f21e891]:
+          - link [ref=f21e892] [cursor=pointer]:
+            - /url: lastBuild/
+            - text: Dernier build (#2), il y a 4 mn 32 s
+            - button [ref=f21e893]
+        - listitem [ref=f21e894]:
+          - link [ref=f21e895] [cursor=pointer]:
+            - /url: lastFailedBuild/
+            - text: Dernier build en échec (#2), il y a 4 mn 32 s
+            - button [ref=f21e896]
+        - listitem [ref=f21e897]:
+          - link [ref=f21e898] [cursor=pointer]:
+            - /url: lastUnsuccessfulBuild/
+            - text: Dernier build non réussi (#2), il y a 4 mn 32 s
+            - button [ref=f21e899]
+        - listitem [ref=f21e900]:
+          - link [ref=f21e901] [cursor=pointer]:
+            - /url: lastCompletedBuild/
+            - text: Dernier build complété (#2), il y a 4 mn 32 s
+            - button [ref=f21e902]
+  - contentinfo [ref=f21e903]:
+    - generic [ref=f21e906]:
+      - link "REST API" [ref=f21e907] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f21e908] [cursor=pointer]

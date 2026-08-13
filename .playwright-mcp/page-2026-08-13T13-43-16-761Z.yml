@@ -1,0 +1,33 @@
+- generic [ref=f2e7]:
+  - heading "Installation en cours..." [level=4] [ref=f2e10]
+  - generic [ref=f2e11]:
+    - generic [ref=f2e12]:
+      - heading "Installation en cours..." [level=1] [ref=f2e13]
+      - progressbar [ref=f2e15]:
+        - generic [ref=f2e16]: Installation en cours...
+    - generic [ref=f2e17]:
+      - generic [ref=f2e18]: Folders Plugin
+      - generic [ref=f2e19]: OWASP Markup Formatter Plugin
+      - generic [ref=f2e20]: Build Timeout
+      - generic [ref=f2e21]: Credentials Binding Plugin
+      - generic [ref=f2e22]: Timestamper
+      - generic [ref=f2e23]: Workspace Cleanup
+      - generic [ref=f2e24]: Ant
+      - generic [ref=f2e25]: Gradle
+      - generic [ref=f2e26]: Pipeline
+      - generic [ref=f2e27]: GitHub Branch Source
+      - generic [ref=f2e28]: "Pipeline: GitHub Groovy Libraries"
+      - generic [ref=f2e29]: Pipeline Graph View
+      - generic [ref=f2e30]: Git plugin
+      - generic [ref=f2e31]: SSH Build Agents
+      - generic [ref=f2e32]: Matrix Authorization Strategy
+      - generic [ref=f2e33]: LDAP
+      - generic [ref=f2e34]: Email Extension
+      - generic [ref=f2e35]: Mailer Plugin
+      - generic [ref=f2e36]: Dark Theme
+    - generic [ref=f2e37]:
+      - generic [ref=f2e39]:
+        - generic [ref=f2e40]: Folders
+        - generic [ref=f2e41]: OWASP Markup Formatter
+      - generic [ref=f2e42]: "** - dépendance requise"
+  - generic [ref=f2e43]: Jenkins 2.541.3

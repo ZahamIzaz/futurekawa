@@ -1,0 +1,7 @@
+- generic [ref=f2e7]:
+  - heading "Démarrage" [level=4] [ref=f2e55]
+  - iframe [ref=f2e58]
+  - generic [ref=f2e59]:
+    - generic [ref=f2e60]: Jenkins 2.541.3
+    - button "Passer cette étape et terminer" [disabled] [ref=f2e61]
+    - button "Sauver et terminer" [disabled] [ref=f2e62]

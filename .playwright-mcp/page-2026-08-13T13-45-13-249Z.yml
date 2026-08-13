@@ -1,0 +1,7 @@
+- generic [ref=f2e7]:
+  - heading "Démarrage" [level=4] [ref=f2e64]
+  - generic [ref=f2e66]:
+    - heading "Jenkins est prêt !" [level=1] [ref=f2e67]
+    - paragraph [ref=f2e68]: L'installation de votre Jenkins est terminée.
+    - button "Commencer à utiliser Jenkins" [ref=f2e69] [cursor=pointer]
+  - generic [ref=f2e70]: Jenkins 2.541.3

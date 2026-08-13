@@ -1,0 +1,207 @@
+- generic [active] [ref=f18e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f18e2]:
+    - generic [ref=f18e4]:
+      - link "Jenkins" [ref=f18e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f18e8]:
+        - list [ref=f18e9]:
+          - listitem [ref=f18e10]:
+            - text: /
+            - link "futurekawa" [ref=f18e11] [cursor=pointer]:
+              - /url: /job/futurekawa/
+            - generic "dropdown menu for futurekawa" [ref=f18e12] [cursor=pointer]
+          - listitem [ref=f18e15]:
+            - text: /
+            - link "#1" [ref=f18e16] [cursor=pointer]:
+              - /url: /job/futurekawa/1/
+            - 'generic "dropdown menu for #1" [ref=f18e17] [cursor=pointer]'
+    - generic [ref=f18e20]:
+      - button "Search" [ref=f18e21] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f18e26] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f18e32] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f18e37]:
+    - generic [ref=f18e39]:
+      - link [ref=f18e42] [cursor=pointer]:
+        - /url: /job/futurekawa/1/
+      - link [ref=f18e49] [cursor=pointer]:
+        - /url: /job/futurekawa/1/changes
+      - link [ref=f18e55]:
+        - /url: /job/futurekawa/1/console
+      - link [ref=f18e62] [cursor=pointer]:
+        - /url: /job/futurekawa/1/configure
+      - link [ref=f18e69] [cursor=pointer]:
+        - /url: /job/futurekawa/1/confirmDelete
+      - link [ref=f18e76] [cursor=pointer]:
+        - /url: /job/futurekawa/1/git
+      - link [ref=f18e82] [cursor=pointer]:
+        - /url: /job/futurekawa/1/stages
+      - link [ref=f18e91] [cursor=pointer]:
+        - /url: /job/futurekawa/1/restart
+      - link [ref=f18e98] [cursor=pointer]:
+        - /url: /job/futurekawa/1/replay
+      - link [ref=f18e104] [cursor=pointer]:
+        - /url: /job/futurekawa/1/flowGraphTable
+      - link [ref=f18e116] [cursor=pointer]:
+        - /url: /job/futurekawa/1/ws
+    - generic [ref=f18e120]:
+      - generic [ref=f18e121]:
+        - heading "Console" [level=1] [ref=f18e123]
+        - generic [ref=f18e124]:
+          - link "Download" [ref=f18e125] [cursor=pointer]:
+            - /url: consoleText
+          - button [ref=f18e130] [cursor=pointer]
+          - link "Voir en texte brut" [ref=f18e134] [cursor=pointer]:
+            - /url: consoleText
+      - generic [ref=f18e135]:
+        - text: Started by user
+        - link [ref=f18e136] [cursor=pointer]:
+          - /url: /user/admin
+          - text: Admin FutureKawa
+          - button [ref=f18e137]
+        - text: Obtained Jenkinsfile from git
+        - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e138] [cursor=pointer]:
+          - /url: https://github.com/ZahamIzaz/futurekawa.git
+        - generic [ref=f18e139]: "[Pipeline] Start of Pipeline"
+        - generic [ref=f18e140]: "[Pipeline] node"
+        - generic [ref=f18e141]:
+          - text: Running on
+          - link [ref=f18e142] [cursor=pointer]:
+            - /url: /computer/(built-in)/
+            - text: Jenkins
+            - button [ref=f18e143]
+          - text: in /var/jenkins_home/workspace/futurekawa
+        - generic [ref=f18e144]: "[Pipeline] {"
+        - generic [ref=f18e145]: "[Pipeline] stage"
+        - generic [ref=f18e146]: "[Pipeline] { (Declarative: Checkout SCM)"
+        - generic [ref=f18e147]: "[Pipeline] checkout"
+        - generic [ref=f18e148]:
+          - text: "The recommended git tool is: git No credentials specified Cloning the remote Git repository Cloning repository"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e149] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "> git init /var/jenkins_home/workspace/futurekawa # timeout=10 Fetching upstream changes from"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e150] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "> git --version # timeout=10 > git --version # 'git version 2.47.3' > git fetch --tags --force --progress --"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e151] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "+refs/heads/*:refs/remotes/origin/* # timeout=10 > git config remote.origin.url"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e152] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "# timeout=10 > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10 Avoid second fetch > git rev-parse refs/remotes/origin/main^{commit} # timeout=10 Checking out Revision 7bd99827adabcb64ea15ddb343166c3ad6fbb562 (refs/remotes/origin/main) > git config core.sparsecheckout # timeout=10 > git checkout -f 7bd99827adabcb64ea15ddb343166c3ad6fbb562 # timeout=10 Commit message: \"feat(ci): Mission 12 – pipeline Jenkins CI/CD\" First time build. Skipping changelog."
+        - text: "[Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e153]: "[Pipeline] withEnv"
+        - generic [ref=f18e154]: "[Pipeline] {"
+        - generic [ref=f18e155]: "[Pipeline] withEnv"
+        - generic [ref=f18e156]: "[Pipeline] {"
+        - generic [ref=f18e157]: "[Pipeline] stage"
+        - generic [ref=f18e158]: "[Pipeline] { (Checkout)"
+        - generic [ref=f18e159]: "[Pipeline] checkout"
+        - generic [ref=f18e160]:
+          - text: "The recommended git tool is: git No credentials specified > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/futurekawa/.git # timeout=10 Fetching changes from the remote Git repository > git config remote.origin.url"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e161] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "# timeout=10 Fetching upstream changes from"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e162] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "> git --version # timeout=10 > git --version # 'git version 2.47.3' > git fetch --tags --force --progress --"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f18e163] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "+refs/heads/*:refs/remotes/origin/* # timeout=10 > git rev-parse refs/remotes/origin/main^{commit} # timeout=10 Checking out Revision 7bd99827adabcb64ea15ddb343166c3ad6fbb562 (refs/remotes/origin/main) > git config core.sparsecheckout # timeout=10 > git checkout -f 7bd99827adabcb64ea15ddb343166c3ad6fbb562 # timeout=10 Commit message: \"feat(ci): Mission 12 – pipeline Jenkins CI/CD\""
+        - generic [ref=f18e164]: "[Pipeline] sh"
+        - text: "+ git rev-parse --short HEAD + echo Commit : 7bd9982 Commit : 7bd9982"
+        - generic [ref=f18e165]: "[Pipeline] sh"
+        - text: "+ echo Branche: origin/main Branche: origin/main [Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e166]: "[Pipeline] stage"
+        - generic [ref=f18e167]: "[Pipeline] { (Install)"
+        - generic [ref=f18e168]: "[Pipeline] parallel"
+        - generic [ref=f18e169]: "[Pipeline] { (Branch: backend-country)"
+        - generic [ref=f18e170]: "[Pipeline] { (Branch: backend-central)"
+        - generic [ref=f18e171]: "[Pipeline] { (Branch: frontend)"
+        - generic [ref=f18e172]: "[Pipeline] stage"
+        - generic [ref=f18e173]: "[Pipeline] { (backend-country)"
+        - generic [ref=f18e174]: "[Pipeline] stage"
+        - generic [ref=f18e175]: "[Pipeline] { (backend-central)"
+        - generic [ref=f18e176]: "[Pipeline] stage"
+        - generic [ref=f18e177]: "[Pipeline] { (frontend)"
+        - generic [ref=f18e178]: "[Pipeline] dir"
+        - text: "[backend-country] Running in /var/jenkins_home/workspace/futurekawa/backend-country"
+        - generic [ref=f18e179]: "[Pipeline] {"
+        - generic [ref=f18e180]: "[Pipeline] dir"
+        - text: "[backend-central] Running in /var/jenkins_home/workspace/futurekawa/backend-central"
+        - generic [ref=f18e181]: "[Pipeline] {"
+        - generic [ref=f18e182]: "[Pipeline] dir"
+        - text: "[frontend] Running in /var/jenkins_home/workspace/futurekawa/frontend"
+        - generic [ref=f18e183]: "[Pipeline] {"
+        - generic [ref=f18e184]: "[Pipeline] sh"
+        - generic [ref=f18e185]: "[Pipeline] sh"
+        - generic [ref=f18e186]: "[Pipeline] sh"
+        - text: "[backend-country] + npm ci [backend-central] + npm ci [frontend] + npm ci npm error code EUSAGE npm error npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing. npm error npm error Missing: esbuild@0.28.2 from lock file npm error Missing: @esbuild/aix-ppc64@0.28.2 from lock file npm error Missing: @esbuild/android-arm@0.28.2 from lock file npm error Missing: @esbuild/android-arm64@0.28.2 from lock file npm error Missing: @esbuild/android-x64@0.28.2 from lock file npm error Missing: @esbuild/darwin-arm64@0.28.2 from lock file npm error Missing: @esbuild/darwin-x64@0.28.2 from lock file npm error Missing: @esbuild/freebsd-arm64@0.28.2 from lock file npm error Missing: @esbuild/freebsd-x64@0.28.2 from lock file npm error Missing: @esbuild/linux-arm@0.28.2 from lock file npm error Missing: @esbuild/linux-arm64@0.28.2 from lock file npm error Missing: @esbuild/linux-ia32@0.28.2 from lock file npm error Missing: @esbuild/linux-loong64@0.28.2 from lock file npm error Missing: @esbuild/linux-mips64el@0.28.2 from lock file npm error Missing: @esbuild/linux-ppc64@0.28.2 from lock file npm error Missing: @esbuild/linux-riscv64@0.28.2 from lock file npm error Missing: @esbuild/linux-s390x@0.28.2 from lock file npm error Missing: @esbuild/linux-x64@0.28.2 from lock file npm error Missing: @esbuild/netbsd-arm64@0.28.2 from lock file npm error Missing: @esbuild/netbsd-x64@0.28.2 from lock file npm error Missing: @esbuild/openbsd-arm64@0.28.2 from lock file npm error Missing: @esbuild/openbsd-x64@0.28.2 from lock file npm error Missing: @esbuild/openharmony-arm64@0.28.2 from lock file npm error Missing: @esbuild/sunos-x64@0.28.2 from lock file npm error Missing: @esbuild/win32-arm64@0.28.2 from lock file npm error Missing: @esbuild/win32-ia32@0.28.2 from lock file npm error Missing: @esbuild/win32-x64@0.28.2 from lock file npm error npm error Clean install a project npm error npm error Usage: npm error npm ci npm error npm error Options: npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling] npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]] npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]] npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit] npm error [--no-bin-links] [--no-fund] [--dry-run] npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]] npm error [-ws|--workspaces] [--include-workspace-root] [--install-links] npm error npm error aliases: clean-install, ic, install-clean, isntall-clean npm error npm error Run \"npm help ci\" for more info npm error A complete log of this run can be found in: /var/jenkins_home/.npm/_logs/2026-08-13T13_53_48_339Z-debug-0.log [Pipeline] } [Pipeline] // dir [Pipeline] } [Pipeline] // stage [Pipeline] } Failed in branch frontend [backend-central] added 186 packages, and audited 187 packages in 6s 38 packages are looking for funding run `npm fund` for details found 0 vulnerabilities [Pipeline] } [Pipeline] // dir [Pipeline] } [Pipeline] // stage [Pipeline] } [backend-country] added 266 packages, and audited 267 packages in 15s 48 packages are looking for funding run `npm fund` for details 1 high severity vulnerability To address all issues (including breaking changes), run: npm audit fix --force Run `npm audit` for details. [Pipeline] } [Pipeline] // dir [Pipeline] } [Pipeline] // stage [Pipeline] } [Pipeline] // parallel [Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e187]: "[Pipeline] stage"
+        - generic [ref=f18e188]: "[Pipeline] { (Build)"
+        - text: Stage "Build" skipped due to earlier failure(s)
+        - generic [ref=f18e189]: "[Pipeline] getContext"
+        - generic [ref=f18e190]: "[Pipeline] parallel"
+        - generic [ref=f18e191]: "[Pipeline] { (Branch: backend-country)"
+        - generic [ref=f18e192]: "[Pipeline] { (Branch: backend-central)"
+        - generic [ref=f18e193]: "[Pipeline] { (Branch: frontend)"
+        - generic [ref=f18e194]: "[Pipeline] stage"
+        - generic [ref=f18e195]: "[Pipeline] { (backend-country)"
+        - generic [ref=f18e196]: "[Pipeline] stage"
+        - generic [ref=f18e197]: "[Pipeline] { (backend-central)"
+        - generic [ref=f18e198]: "[Pipeline] stage"
+        - generic [ref=f18e199]: "[Pipeline] { (frontend)"
+        - text: Stage "backend-country" skipped due to earlier failure(s)
+        - generic [ref=f18e200]: "[Pipeline] getContext"
+        - text: "[Pipeline] } Stage \"backend-central\" skipped due to earlier failure(s)"
+        - generic [ref=f18e201]: "[Pipeline] getContext"
+        - text: "[Pipeline] } Stage \"frontend\" skipped due to earlier failure(s)"
+        - generic [ref=f18e202]: "[Pipeline] getContext"
+        - text: "[Pipeline] } [Pipeline] // stage [Pipeline] // stage [Pipeline] // stage [Pipeline] } Failed in branch backend-country [Pipeline] } Failed in branch backend-central [Pipeline] } Failed in branch frontend [Pipeline] // parallel [Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e203]: "[Pipeline] stage"
+        - generic [ref=f18e204]: "[Pipeline] { (Tests)"
+        - text: Stage "Tests" skipped due to earlier failure(s)
+        - generic [ref=f18e205]: "[Pipeline] getContext"
+        - generic [ref=f18e206]: "[Pipeline] parallel"
+        - generic [ref=f18e207]: "[Pipeline] { (Branch: backend-country (37))"
+        - generic [ref=f18e208]: "[Pipeline] { (Branch: backend-central (12))"
+        - generic [ref=f18e209]: "[Pipeline] { (Branch: frontend (19))"
+        - generic [ref=f18e210]: "[Pipeline] stage"
+        - generic [ref=f18e211]: "[Pipeline] { (backend-country (37))"
+        - generic [ref=f18e212]: "[Pipeline] stage"
+        - generic [ref=f18e213]: "[Pipeline] { (backend-central (12))"
+        - generic [ref=f18e214]: "[Pipeline] stage"
+        - generic [ref=f18e215]: "[Pipeline] { (frontend (19))"
+        - text: Stage "backend-country (37)" skipped due to earlier failure(s)
+        - generic [ref=f18e216]: "[Pipeline] getContext"
+        - text: "[Pipeline] } Stage \"backend-central (12)\" skipped due to earlier failure(s)"
+        - generic [ref=f18e217]: "[Pipeline] getContext"
+        - text: "[Pipeline] } Stage \"frontend (19)\" skipped due to earlier failure(s)"
+        - generic [ref=f18e218]: "[Pipeline] getContext"
+        - text: "[Pipeline] } [Pipeline] // stage [Pipeline] // stage [Pipeline] // stage [Pipeline] } Failed in branch backend-country (37) [Pipeline] } Failed in branch backend-central (12) [Pipeline] } Failed in branch frontend (19) [Pipeline] // parallel [Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e219]: "[Pipeline] stage"
+        - generic [ref=f18e220]: "[Pipeline] { (Quality)"
+        - text: Stage "Quality" skipped due to earlier failure(s)
+        - generic [ref=f18e221]: "[Pipeline] getContext"
+        - text: "[Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e222]: "[Pipeline] stage"
+        - generic [ref=f18e223]: "[Pipeline] { (Docker Build)"
+        - text: Stage "Docker Build" skipped due to earlier failure(s)
+        - generic [ref=f18e224]: "[Pipeline] getContext"
+        - text: "[Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e225]: "[Pipeline] stage"
+        - generic [ref=f18e226]: "[Pipeline] { (Archive)"
+        - text: Stage "Archive" skipped due to earlier failure(s)
+        - generic [ref=f18e227]: "[Pipeline] getContext"
+        - text: "[Pipeline] } [Pipeline] // stage"
+        - generic [ref=f18e228]: "[Pipeline] stage"
+        - generic [ref=f18e229]: "[Pipeline] { (Declarative: Post Actions)"
+        - generic [ref=f18e230]: "[Pipeline] junit"
+        - text: Recording test results No test report files were found. Configuration error? [Checks API] No suitable checks publisher found.
+        - generic [ref=f18e231]: "[Pipeline] echo"
+        - text: "============================================== Pipeline FutureKawa - ECHEC Build #1 Consultez les logs pour les details ============================================== [Pipeline] } [Pipeline] // stage [Pipeline] } [Pipeline] // withEnv [Pipeline] } [Pipeline] // withEnv [Pipeline] } [Pipeline] // node [Pipeline] End of Pipeline ERROR: script returned exit code 1 Finished: FAILURE"
+  - contentinfo [ref=f18e232]:
+    - button "Jenkins 2.541.3" [ref=f18e236] [cursor=pointer]

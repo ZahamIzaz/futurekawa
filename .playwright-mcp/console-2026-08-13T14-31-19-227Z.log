@@ -1,0 +1,3 @@
+[      54ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://localhost:8080/job/futurekawa/build?delay=0sec:0
+[     904ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:8080/login?from=%2Fjob%2Ffuturekawa%2Fbuild%3Fdelay%3D0sec:0
+[   11737ms] [ERROR] Failed to load resource: the server responded with a status of 405 (Method Not Allowed) @ http://localhost:8080/job/futurekawa/build?delay=0sec:0

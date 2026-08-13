@@ -1,0 +1,149 @@
+- generic [ref=f9e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f9e2]:
+    - generic [ref=f9e4]:
+      - link "Jenkins" [ref=f9e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f9e8]:
+        - list [ref=f9e9]:
+          - listitem [ref=f9e10]:
+            - text: /
+            - link "futurekawa" [ref=f9e11] [cursor=pointer]:
+              - /url: /job/futurekawa/
+            - generic "dropdown menu for futurekawa" [ref=f9e12] [cursor=pointer]
+          - listitem [ref=f9e15]:
+            - text: /
+            - generic [ref=f9e16]: Configurer
+    - generic [ref=f9e17]:
+      - button "Search" [ref=f9e18] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f9e23] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f9e29] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f9e34]:
+    - generic [ref=f9e35]:
+      - heading "Configurer" [level=1] [ref=f9e38]
+      - generic [ref=f9e39]:
+        - button [ref=f9e42] [cursor=pointer]
+        - button [ref=f9e48]
+        - button [ref=f9e55] [cursor=pointer]
+        - button [ref=f9e62] [cursor=pointer]
+    - generic [ref=f9e69]:
+      - generic [ref=f9e70]:
+        - heading "Général" [level=2] [ref=f9e72]
+        - generic "Enable or disable the current project" [ref=f9e74]:
+          - checkbox "Disabled Enabled" [checked] [ref=f9e75]
+          - generic [ref=f9e76] [cursor=pointer]:
+            - generic [ref=f9e77]: Disabled
+            - generic [ref=f9e78]: Enabled
+      - generic [ref=f9e80]:
+        - generic [ref=f9e81]: Description
+        - generic [ref=f9e82]:
+          - textbox [ref=f9e83]
+          - generic [ref=f9e84]:
+            - text: Texte brut
+            - link "Prévisualisation" [ref=f9e85] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=f9e86]:
+        - generic [ref=f9e89]:
+          - generic [ref=f9e90]:
+            - checkbox [ref=f9e91]
+            - generic [ref=f9e92] [cursor=pointer]: Ce build a des paramètres
+          - 'link "Help for feature: Ce build a des paramètres" [ref=f9e93] [cursor=pointer]':
+            - /url: "#"
+            - generic [ref=f9e94]: "?"
+        - generic [ref=f9e98]:
+          - checkbox [ref=f9e99]
+          - generic [ref=f9e100] [cursor=pointer]: Do not allow concurrent builds
+        - generic [ref=f9e104]:
+          - checkbox [ref=f9e105]
+          - generic [ref=f9e106] [cursor=pointer]: Do not allow the pipeline to resume if the controller restarts
+        - generic [ref=f9e110]:
+          - checkbox [ref=f9e111]
+          - generic [ref=f9e112] [cursor=pointer]: GitHub project
+        - generic [ref=f9e115]:
+          - generic [ref=f9e116]:
+            - checkbox [ref=f9e117]
+            - generic [ref=f9e118] [cursor=pointer]: Pipeline speed/durability override
+          - 'link "Help for feature: Pipeline speed/durability override" [ref=f9e119] [cursor=pointer]':
+            - /url: "#"
+            - generic [ref=f9e120]: "?"
+        - generic [ref=f9e123]:
+          - generic [ref=f9e124]:
+            - checkbox [ref=f9e125]
+            - generic [ref=f9e126] [cursor=pointer]: Preserve stashes from completed builds
+          - 'link "Help for feature: Preserve stashes from completed builds" [ref=f9e127] [cursor=pointer]':
+            - /url: "#"
+            - generic [ref=f9e128]: "?"
+        - generic [ref=f9e131]:
+          - generic [ref=f9e132]:
+            - checkbox [ref=f9e133]
+            - generic [ref=f9e134] [cursor=pointer]: Supprimer les anciens builds
+          - 'link "Help for feature: Supprimer les anciens builds" [ref=f9e135] [cursor=pointer]':
+            - /url: "#"
+            - generic [ref=f9e136]: "?"
+        - generic [ref=f9e139]:
+          - generic [ref=f9e140]:
+            - checkbox [ref=f9e141]
+            - generic [ref=f9e142] [cursor=pointer]: Throttle builds
+          - 'link "Help for feature: Throttle builds" [ref=f9e143] [cursor=pointer]':
+            - /url: "#"
+            - generic [ref=f9e144]: "?"
+        - generic [ref=f9e145]:
+          - generic [ref=f9e146]: Triggers
+          - generic [ref=f9e147]: Set up automated actions that start your build based on specific events, like code changes or scheduled times.
+          - generic [ref=f9e150]:
+            - generic [ref=f9e151]:
+              - checkbox [ref=f9e152]
+              - generic [ref=f9e153] [cursor=pointer]: Construire après le build sur d'autres projets
+            - 'link "Help for feature: Construire après le build sur d''autres projets" [ref=f9e154] [cursor=pointer]':
+              - /url: "#"
+              - generic [ref=f9e155]: "?"
+          - generic [ref=f9e158]:
+            - generic [ref=f9e159]:
+              - checkbox [ref=f9e160]
+              - generic [ref=f9e161] [cursor=pointer]: Construire périodiquement
+            - 'link "Help for feature: Construire périodiquement" [ref=f9e162] [cursor=pointer]':
+              - /url: "#"
+              - generic [ref=f9e163]: "?"
+          - generic [ref=f9e166]:
+            - generic [ref=f9e167]:
+              - checkbox [ref=f9e168]
+              - generic [ref=f9e169] [cursor=pointer]: GitHub hook trigger for GITScm polling
+            - 'link "Help for feature: GitHub hook trigger for GITScm polling" [ref=f9e170] [cursor=pointer]':
+              - /url: "#"
+              - generic [ref=f9e171]: "?"
+          - generic [ref=f9e174]:
+            - generic [ref=f9e175]:
+              - checkbox [ref=f9e176]
+              - generic [ref=f9e177] [cursor=pointer]: Scrutation de l'outil de gestion de version
+            - 'link "Help for feature: Scrutation de l''outil de gestion de version" [ref=f9e178] [cursor=pointer]':
+              - /url: "#"
+              - generic [ref=f9e179]: "?"
+      - generic [ref=f9e182]:
+        - generic [ref=f9e183]:
+          - checkbox [ref=f9e184]
+          - generic [ref=f9e185] [cursor=pointer]: Déclencher les builds à distance (Par exemple, à partir de scripts)
+        - 'link "Help for feature: Déclencher les builds à distance (Par exemple, à partir de scripts)" [ref=f9e186] [cursor=pointer]':
+          - /url: "#"
+          - generic [ref=f9e187]: "?"
+      - generic [ref=f9e188]:
+        - generic [ref=f9e189]: Pipeline
+        - generic [ref=f9e190]: Define your Pipeline using Groovy directly or pull it from source control.
+        - generic [ref=f9e191]:
+          - generic [ref=f9e192]: Definition
+          - combobox [active] [ref=f9e194] [cursor=pointer]:
+            - option "Pipeline script"
+            - option "Pipeline script from SCM" [selected]
+      - generic [ref=f9e195]:
+        - generic [ref=f9e196]: Advanced
+        - button "Avancé" [ref=f9e199] [cursor=pointer]
+      - generic [ref=f9e204]:
+        - button "Save" [ref=f9e205] [cursor=pointer]
+        - button "Appliquer" [ref=f9e206] [cursor=pointer]
+  - contentinfo [ref=f9e207]:
+    - generic [ref=f9e210]:
+      - link "REST API" [ref=f9e211] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f9e212] [cursor=pointer]

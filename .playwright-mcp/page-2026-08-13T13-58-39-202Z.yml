@@ -1,0 +1,238 @@
+- generic [ref=f19e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f19e2]:
+    - generic [ref=f19e4]:
+      - link "Jenkins" [ref=f19e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f19e8]:
+        - list [ref=f19e9]:
+          - listitem [ref=f19e10]:
+            - text: /
+            - generic [ref=f19e11]: futurekawa
+    - generic [ref=f19e12]:
+      - button "Search" [ref=f19e13] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f19e18] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f19e24] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f19e29]:
+    - generic [ref=f19e30]:
+      - generic [ref=f19e31]:
+        - link [ref=f19e34]:
+          - /url: /job/futurekawa/
+        - link [ref=f19e41] [cursor=pointer]:
+          - /url: /job/futurekawa/changes
+        - link [active] [ref=f19e47] [cursor=pointer]:
+          - /url: /job/futurekawa/build?delay=0sec
+        - link [ref=f19e53] [cursor=pointer]:
+          - /url: /job/futurekawa/configure
+        - link "Supprimer Pipeline" [ref=f19e61] [cursor=pointer]:
+          - /url: "#"
+        - link [ref=f19e69] [cursor=pointer]:
+          - /url: /job/futurekawa/workflow-stage
+        - link [ref=f19e76] [cursor=pointer]:
+          - /url: /job/futurekawa/multi-pipeline-graph
+        - link [ref=f19e83] [cursor=pointer]:
+          - /url: /job/futurekawa/confirm-rename
+        - link [ref=f19e91] [cursor=pointer]:
+          - /url: /job/futurekawa/pipeline-syntax
+      - generic [ref=f19e98]:
+        - generic [ref=f19e99]:
+          - link "Builds" [ref=f19e100] [cursor=pointer]:
+            - /url: /job/futurekawa/buildTimeTrend
+          - button "More actions" [ref=f19e104] [cursor=pointer]
+        - generic [ref=f19e109]:
+          - searchbox "Filter" [ref=f19e112]
+          - generic [ref=f19e167]:
+            - generic [ref=f19e168]: Today
+            - generic [ref=f19e169] [cursor=pointer]:
+              - link "En cours" [ref=f19e170]:
+                - /url: /job/futurekawa/2/console
+              - generic [ref=f19e175]:
+                - link "#2 13:58" [ref=f19e176]:
+                  - /url: /job/futurekawa/2/
+                  - text: "#2"
+                  - generic [ref=f19e177]: 13:58
+                - generic [ref=f19e179]:
+                  - 'link "Démarré il y a 1.1 s Temps restant estimé : 46 s" [ref=f19e180]':
+                    - /url: /job/futurekawa/2/console
+                  - link "Cancel" [ref=f19e182]:
+                    - /url: /job/futurekawa/2/stop
+              - button [ref=f19e186]
+            - generic [ref=f19e189] [cursor=pointer]:
+              - link "En échec" [ref=f19e190]:
+                - /url: /job/futurekawa/1/console
+              - link "#1 13:53" [ref=f19e195]:
+                - /url: /job/futurekawa/1/
+                - text: "#1"
+                - generic "Took 47 s" [ref=f19e197]: 13:53
+              - button [ref=f19e198]
+    - generic [ref=f19e133]:
+      - generic [ref=f19e134]:
+        - generic [ref=f19e135]:
+          - link [ref=f19e136] [cursor=pointer]:
+            - /url: /job/futurekawa/1/
+          - heading "futurekawa" [level=1] [ref=f19e140]
+        - link "Ajouter une description" [ref=f19e142] [cursor=pointer]:
+          - /url: editDescription
+      - table
+      - generic [ref=f19e204]:
+        - heading "Stage View" [level=2] [ref=f19e205]
+        - table [ref=f19e208]:
+          - rowgroup [ref=f19e228]:
+            - row [ref=f19e229]:
+              - columnheader [ref=f19e230]
+              - 'columnheader "Declarative: Checkout SCM" [ref=f19e231]'
+              - columnheader "Checkout" [ref=f19e232]
+              - columnheader "Install" [ref=f19e233]
+              - columnheader "backend-country" [ref=f19e234]
+              - columnheader "backend-central" [ref=f19e235]
+              - columnheader "frontend" [ref=f19e236]
+              - columnheader "Build" [ref=f19e237]
+              - columnheader "backend-country" [ref=f19e238]
+              - columnheader "backend-central" [ref=f19e239]
+              - columnheader "frontend" [ref=f19e240]
+              - columnheader "Tests" [ref=f19e241]
+              - columnheader "backend-country (37)" [ref=f19e242]
+              - columnheader "backend-central (12)" [ref=f19e243]
+              - columnheader "frontend (19)" [ref=f19e244]
+              - columnheader "Quality" [ref=f19e245]
+              - columnheader "Docker Build" [ref=f19e246]
+              - columnheader "Archive" [ref=f19e247]
+              - 'columnheader "Declarative: Post Actions" [ref=f19e248]'
+          - rowgroup [ref=f19e249]:
+            - row [ref=f19e250]:
+              - cell "Average stage times:" [ref=f19e251]
+              - cell "12s" [ref=f19e253]
+              - cell "4s" [ref=f19e276]
+              - cell "120ms" [ref=f19e299]
+              - cell "7s" [ref=f19e322]
+              - cell "3s" [ref=f19e345]
+              - cell "1s" [ref=f19e368]
+              - cell "155ms" [ref=f19e391]
+              - cell "0ms" [ref=f19e414]
+              - cell "0ms" [ref=f19e437]
+              - cell "0ms" [ref=f19e460]
+              - cell "118ms" [ref=f19e483]
+              - cell "167ms" [ref=f19e506]
+              - cell "164ms" [ref=f19e529]
+              - cell "164ms" [ref=f19e552]
+              - cell "60ms" [ref=f19e575]
+              - cell "55ms" [ref=f19e598]
+              - cell "54ms" [ref=f19e621]
+              - cell "398ms" [ref=f19e644]
+          - rowgroup [ref=f19e667]:
+            - row [ref=f19e668]:
+              - cell "#2 août 13 15:58 No Changes" [ref=f19e669]:
+                - generic [ref=f19e671]:
+                  - link "#2" [ref=f19e674] [cursor=pointer]:
+                    - /url: 2/
+                  - generic [ref=f19e675]:
+                    - generic [ref=f19e676]:
+                      - generic [ref=f19e677]: août 13
+                      - generic [ref=f19e678]: 15:58
+                    - generic [ref=f19e679]: No Changes
+              - cell [ref=f19e681]
+              - cell [ref=f19e682]
+              - cell [ref=f19e683]
+              - cell [ref=f19e684]
+              - cell [ref=f19e685]
+              - cell [ref=f19e686]
+              - cell [ref=f19e687]
+              - cell [ref=f19e688]
+              - cell [ref=f19e689]
+              - cell [ref=f19e690]
+              - cell [ref=f19e691]
+              - cell [ref=f19e692]
+              - cell [ref=f19e693]
+              - cell [ref=f19e694]
+              - cell [ref=f19e695]
+              - cell [ref=f19e696]
+              - cell [ref=f19e697]
+              - cell [ref=f19e698]
+            - row [ref=f19e699]:
+              - cell "#1 août 13 15:53 No Changes" [ref=f19e700]:
+                - generic [ref=f19e702]:
+                  - link "#1" [ref=f19e705] [cursor=pointer]:
+                    - /url: 1/
+                  - generic [ref=f19e706]:
+                    - generic [ref=f19e707]:
+                      - generic [ref=f19e708]: août 13
+                      - generic [ref=f19e709]: 15:53
+                    - generic [ref=f19e710]: No Changes
+              - cell "12s" [ref=f19e712]
+              - cell "4s" [ref=f19e718]
+              - cell "120ms" [ref=f19e724]
+              - cell "15s" [ref=f19e730]
+              - cell "7s" [ref=f19e736]
+              - cell "3s failed" [ref=f19e742]:
+                - generic [ref=f19e744]:
+                  - generic [ref=f19e745]: 3s
+                  - generic [ref=f19e747]: failed
+              - cell "155ms" [ref=f19e749]
+              - cell "179ms failed" [ref=f19e755]:
+                - generic [ref=f19e757]:
+                  - generic [ref=f19e758]: 179ms
+                  - generic [ref=f19e760]: failed
+              - cell "180ms failed" [ref=f19e762]:
+                - generic [ref=f19e764]:
+                  - generic [ref=f19e765]: 180ms
+                  - generic [ref=f19e767]: failed
+              - cell "178ms failed" [ref=f19e769]:
+                - generic [ref=f19e771]:
+                  - generic [ref=f19e772]: 178ms
+                  - generic [ref=f19e774]: failed
+              - cell "118ms" [ref=f19e776]
+              - cell "167ms failed" [ref=f19e782]:
+                - generic [ref=f19e784]:
+                  - generic [ref=f19e785]: 167ms
+                  - generic [ref=f19e787]: failed
+              - cell "164ms failed" [ref=f19e789]:
+                - generic [ref=f19e791]:
+                  - generic [ref=f19e792]: 164ms
+                  - generic [ref=f19e794]: failed
+              - cell "164ms failed" [ref=f19e796]:
+                - generic [ref=f19e798]:
+                  - generic [ref=f19e799]: 164ms
+                  - generic [ref=f19e801]: failed
+              - cell "60ms failed" [ref=f19e803]:
+                - generic [ref=f19e805]:
+                  - generic [ref=f19e806]: 60ms
+                  - generic [ref=f19e808]: failed
+              - cell "55ms failed" [ref=f19e810]:
+                - generic [ref=f19e812]:
+                  - generic [ref=f19e813]: 55ms
+                  - generic [ref=f19e815]: failed
+              - cell "54ms failed" [ref=f19e817]:
+                - generic [ref=f19e819]:
+                  - generic [ref=f19e820]: 54ms
+                  - generic [ref=f19e822]: failed
+              - cell "398ms" [ref=f19e824]
+      - heading "Liens permanents" [level=2] [ref=f19e147]
+      - list [ref=f19e148]:
+        - listitem [ref=f19e149]:
+          - link [ref=f19e150] [cursor=pointer]:
+            - /url: lastBuild/
+            - text: Dernier build (#1), il y a 5 mn 10 s
+            - button [ref=f19e151]
+        - listitem [ref=f19e152]:
+          - link [ref=f19e153] [cursor=pointer]:
+            - /url: lastFailedBuild/
+            - text: Dernier build en échec (#1), il y a 5 mn 10 s
+            - button [ref=f19e154]
+        - listitem [ref=f19e155]:
+          - link [ref=f19e156] [cursor=pointer]:
+            - /url: lastUnsuccessfulBuild/
+            - text: Dernier build non réussi (#1), il y a 5 mn 10 s
+            - button [ref=f19e157]
+        - listitem [ref=f19e158]:
+          - link [ref=f19e159] [cursor=pointer]:
+            - /url: lastCompletedBuild/
+            - text: Dernier build complété (#1), il y a 5 mn 10 s
+            - button [ref=f19e160]
+  - contentinfo [ref=f19e161]:
+    - generic [ref=f19e164]:
+      - link "REST API" [ref=f19e165] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f19e166] [cursor=pointer]

@@ -1,0 +1,114 @@
+- generic [active] [ref=f20e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f20e2]:
+    - generic [ref=f20e4]:
+      - link "Jenkins" [ref=f20e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f20e8]:
+        - list [ref=f20e9]:
+          - listitem [ref=f20e10]:
+            - text: /
+            - link "futurekawa" [ref=f20e11] [cursor=pointer]:
+              - /url: /job/futurekawa/
+            - generic "dropdown menu for futurekawa" [ref=f20e12] [cursor=pointer]
+          - listitem [ref=f20e15]:
+            - text: /
+            - link "#2" [ref=f20e16] [cursor=pointer]:
+              - /url: /job/futurekawa/2/
+            - 'generic "dropdown menu for #2" [ref=f20e17] [cursor=pointer]'
+    - generic [ref=f20e20]:
+      - button "Search" [ref=f20e21] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f20e26] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f20e32] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f20e37]:
+    - generic [ref=f20e39]:
+      - link [ref=f20e42] [cursor=pointer]:
+        - /url: /job/futurekawa/2/
+      - link [ref=f20e49] [cursor=pointer]:
+        - /url: /job/futurekawa/2/changes
+      - link [ref=f20e55]:
+        - /url: /job/futurekawa/2/console
+      - link [ref=f20e62] [cursor=pointer]:
+        - /url: /job/futurekawa/2/configure
+      - link [ref=f20e69] [cursor=pointer]:
+        - /url: /job/futurekawa/2/git
+      - link [ref=f20e75] [cursor=pointer]:
+        - /url: /job/futurekawa/2/stages
+      - link [ref=f20e84] [cursor=pointer]:
+        - /url: /job/futurekawa/2/threadDump
+      - link [ref=f20e94] [cursor=pointer]:
+        - /url: /job/futurekawa/2/pause/toggle
+      - link [ref=f20e100] [cursor=pointer]:
+        - /url: /job/futurekawa/2/replay
+      - link [ref=f20e106] [cursor=pointer]:
+        - /url: /job/futurekawa/2/flowGraphTable
+      - link [ref=f20e118] [cursor=pointer]:
+        - /url: /job/futurekawa/2/ws
+      - link [ref=f20e124] [cursor=pointer]:
+        - /url: /job/futurekawa/1/console
+    - generic [ref=f20e128]:
+      - generic [ref=f20e129]:
+        - heading "Console" [level=1] [ref=f20e131]
+        - generic [ref=f20e132]:
+          - link "Download" [ref=f20e133] [cursor=pointer]:
+            - /url: consoleText
+          - button [ref=f20e138] [cursor=pointer]
+          - link "Voir en texte brut" [ref=f20e142] [cursor=pointer]:
+            - /url: consoleText
+      - generic [ref=f20e144]:
+        - text: Started by user
+        - link [ref=f20e145] [cursor=pointer]:
+          - /url: /user/admin
+          - text: Admin FutureKawa
+          - button [ref=f20e146]
+        - text: Obtained Jenkinsfile from git
+        - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e147] [cursor=pointer]:
+          - /url: https://github.com/ZahamIzaz/futurekawa.git
+        - generic [ref=f20e148]: "[Pipeline] Start of Pipeline"
+        - generic [ref=f20e149]: "[Pipeline] node"
+        - generic [ref=f20e150]:
+          - text: Running on
+          - link [ref=f20e151] [cursor=pointer]:
+            - /url: /computer/(built-in)/
+            - text: Jenkins
+            - button [ref=f20e152]
+          - text: in /var/jenkins_home/workspace/futurekawa
+        - generic [ref=f20e153]: "[Pipeline] {"
+        - generic [ref=f20e154]: "[Pipeline] stage"
+        - generic [ref=f20e155]: "[Pipeline] { (Declarative: Checkout SCM)"
+        - generic [ref=f20e156]: "[Pipeline] checkout"
+        - generic [ref=f20e157]:
+          - text: "The recommended git tool is: git No credentials specified > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/futurekawa/.git # timeout=10 Fetching changes from the remote Git repository > git config remote.origin.url"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e158] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "# timeout=10 Fetching upstream changes from"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e159] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "> git --version # timeout=10 > git --version # 'git version 2.47.3' > git fetch --tags --force --progress --"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e160] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "+refs/heads/*:refs/remotes/origin/* # timeout=10 > git rev-parse refs/remotes/origin/main^{commit} # timeout=10 Checking out Revision 3ffafbcb501a9ce3a1041b36a9e26b0ad3dc7786 (refs/remotes/origin/main) > git config core.sparsecheckout # timeout=10 > git checkout -f 3ffafbcb501a9ce3a1041b36a9e26b0ad3dc7786 # timeout=10 Commit message: \"fix(ci): use npm install instead of npm ci to handle cross-platform lock files\" > git rev-list --no-walk 7bd99827adabcb64ea15ddb343166c3ad6fbb562 # timeout=10"
+        - text: "[Pipeline] } [Pipeline] // stage"
+        - generic [ref=f20e161]: "[Pipeline] withEnv"
+        - generic [ref=f20e162]: "[Pipeline] {"
+        - generic [ref=f20e163]: "[Pipeline] withEnv"
+        - generic [ref=f20e164]: "[Pipeline] {"
+        - generic [ref=f20e165]: "[Pipeline] stage"
+        - generic [ref=f20e166]: "[Pipeline] { (Checkout)"
+        - generic [ref=f20e167]: "[Pipeline] checkout"
+        - generic [ref=f20e168]:
+          - text: "The recommended git tool is: git No credentials specified > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/futurekawa/.git # timeout=10 Fetching changes from the remote Git repository > git config remote.origin.url"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e169] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "# timeout=10 Fetching upstream changes from"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e170] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "> git --version # timeout=10 > git --version # 'git version 2.47.3' > git fetch --tags --force --progress --"
+          - link "https://github.com/ZahamIzaz/futurekawa.git" [ref=f20e171] [cursor=pointer]:
+            - /url: https://github.com/ZahamIzaz/futurekawa.git
+          - text: "+refs/heads/*:refs/remotes/origin/* # timeout=10 > git rev-parse refs/remotes/origin/main^{commit} # timeout=10 Checking out Revision 3ffafbcb501a9ce3a1041b36a9e26b0ad3dc7786 (refs/remotes/origin/main) > git config core.sparsecheckout # timeout=10 > git checkout -f 3ffafbcb501a9ce3a1041b36a9e26b0ad3dc7786 # timeout=10"
+  - contentinfo [ref=f20e177]:
+    - button "Jenkins 2.541.3" [ref=f20e181] [cursor=pointer]

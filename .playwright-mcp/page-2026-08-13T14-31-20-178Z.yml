@@ -1,0 +1,14 @@
+- main [ref=f26e2]:
+  - generic [ref=f26e3]:
+    - heading "S'identifier dans Jenkins" [level=1] [ref=f26e4]
+    - generic [ref=f26e5]:
+      - generic [ref=f26e6]:
+        - generic [ref=f26e7]: Utilisateur
+        - textbox "Utilisateur" [active] [ref=f26e8]
+      - generic [ref=f26e9]:
+        - generic [ref=f26e10]: Mot de passe
+        - textbox "Mot de passe" [ref=f26e11]
+      - generic [ref=f26e12]:
+        - checkbox "Garder ma session ouverte" [ref=f26e13]
+        - generic [ref=f26e14] [cursor=pointer]: Garder ma session ouverte
+      - button "S'identifier" [ref=f26e15] [cursor=pointer]

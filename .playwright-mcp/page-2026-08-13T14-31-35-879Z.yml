@@ -1,0 +1,83 @@
+- generic [active] [ref=f28e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f28e2]:
+    - generic [ref=f28e4]:
+      - link "Jenkins" [ref=f28e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f28e8]:
+        - list [ref=f28e9]:
+          - listitem [ref=f28e10]:
+            - text: /
+            - generic [ref=f28e11]: futurekawa
+    - generic [ref=f28e12]:
+      - button "Search" [ref=f28e13] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f28e18] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f28e24] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f28e29]:
+    - generic [ref=f28e30]:
+      - generic [ref=f28e31]:
+        - link [ref=f28e34]:
+          - /url: /job/futurekawa/
+        - link [ref=f28e41] [cursor=pointer]:
+          - /url: /job/futurekawa/changes
+        - link [ref=f28e47] [cursor=pointer]:
+          - /url: /job/futurekawa/build?delay=0sec
+        - link [ref=f28e53] [cursor=pointer]:
+          - /url: /job/futurekawa/configure
+        - link "Supprimer Pipeline" [ref=f28e61] [cursor=pointer]:
+          - /url: "#"
+        - link [ref=f28e69] [cursor=pointer]:
+          - /url: /job/futurekawa/workflow-stage
+        - link [ref=f28e76] [cursor=pointer]:
+          - /url: /job/futurekawa/multi-pipeline-graph
+        - link [ref=f28e83] [cursor=pointer]:
+          - /url: /job/futurekawa/confirm-rename
+        - link [ref=f28e91] [cursor=pointer]:
+          - /url: /job/futurekawa/pipeline-syntax
+      - generic [ref=f28e98]:
+        - generic [ref=f28e99]:
+          - link "Builds" [ref=f28e100] [cursor=pointer]:
+            - /url: /job/futurekawa/buildTimeTrend
+          - button "More actions" [ref=f28e104] [cursor=pointer]
+        - generic [ref=f28e109]:
+          - searchbox "Filter" [ref=f28e112]
+          - paragraph [ref=f28e119]: Loading builds...
+    - generic [ref=f28e120]:
+      - generic [ref=f28e121]:
+        - generic [ref=f28e122]:
+          - link [ref=f28e123] [cursor=pointer]:
+            - /url: /job/futurekawa/6/
+          - heading "futurekawa" [level=1] [ref=f28e127]
+        - link "Ajouter une description" [ref=f28e129] [cursor=pointer]:
+          - /url: editDescription
+      - table
+      - heading "Liens permanents" [level=2] [ref=f28e134]
+      - list [ref=f28e135]:
+        - listitem [ref=f28e136]:
+          - link [ref=f28e137] [cursor=pointer]:
+            - /url: lastBuild/
+            - text: Dernier build (#6), il y a 10 mn
+            - button [ref=f28e138]
+        - listitem [ref=f28e139]:
+          - link [ref=f28e140] [cursor=pointer]:
+            - /url: lastFailedBuild/
+            - text: Dernier build en échec (#6), il y a 10 mn
+            - button [ref=f28e141]
+        - listitem [ref=f28e142]:
+          - link [ref=f28e143] [cursor=pointer]:
+            - /url: lastUnsuccessfulBuild/
+            - text: Dernier build non réussi (#6), il y a 10 mn
+            - button [ref=f28e144]
+        - listitem [ref=f28e145]:
+          - link [ref=f28e146] [cursor=pointer]:
+            - /url: lastCompletedBuild/
+            - text: Dernier build complété (#6), il y a 10 mn
+            - button [ref=f28e147]
+  - contentinfo [ref=f28e148]:
+    - generic [ref=f28e151]:
+      - link "REST API" [ref=f28e152] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f28e153] [cursor=pointer]

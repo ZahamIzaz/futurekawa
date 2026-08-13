@@ -1,0 +1,48 @@
+- generic [ref=f12e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f12e2]:
+    - generic [ref=f12e4]:
+      - link "Jenkins" [ref=f12e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f12e8]:
+        - list [ref=f12e9]:
+          - listitem [ref=f12e10]:
+            - text: /
+            - generic [ref=f12e11]: Script Console
+    - generic [ref=f12e12]:
+      - button "Search" [ref=f12e13] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f12e18] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f12e24] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f12e30]:
+    - heading "Script Console" [level=1] [ref=f12e31]
+    - paragraph [ref=f12e32]:
+      - text: Vous pouvez saisir ici un
+      - link "script Groovy" [ref=f12e33] [cursor=pointer]:
+        - /url: https://www.groovy-lang.org
+      - text: quelconque pour l’exécuter sur le serveur.Utile pour diagnostiquer et résoudre des problèmes.Utilisez la commande "println" pour voir la sortie (si vous utilisez
+      - code [ref=f12e34]: System.out
+      - text: ", cela ira vers la sortie standard du serveur, qui est plus complexe à retrouver.) Par exemple :"
+    - generic [ref=f12e35]: println(Jenkins.instance.pluginManager.plugins)
+    - paragraph [ref=f12e36]:
+      - text: Toutes les classes de tous les plugins sont visibles.
+      - code [ref=f12e37]: jenkins.*
+      - text: ","
+      - code [ref=f12e38]: jenkins.model.*
+      - text: ","
+      - code [ref=f12e39]: hudson.*
+      - text: ", et"
+      - code [ref=f12e40]: hudson.model.*
+      - text: sont pré-importées.
+    - generic [ref=f12e41]:
+      - generic [ref=f12e42]:
+        - textbox [active] [ref=f12e43]
+        - generic [ref=f12e44]: "1"
+      - button "Exécuter" [ref=f12e56] [cursor=pointer]
+  - contentinfo [ref=f12e57]:
+    - generic [ref=f12e60]:
+      - link "REST API" [ref=f12e61] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f12e62] [cursor=pointer]

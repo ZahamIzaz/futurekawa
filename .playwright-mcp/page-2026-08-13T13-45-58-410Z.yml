@@ -1,0 +1,64 @@
+- generic [ref=f6e1]:
+  - link "Skip to content":
+    - /url: "#skip2content"
+  - banner [ref=f6e2]:
+    - generic [ref=f6e4]:
+      - link "Jenkins" [ref=f6e5] [cursor=pointer]:
+        - /url: /
+      - generic "breadcrumb" [ref=f6e8]:
+        - list [ref=f6e9]:
+          - listitem [ref=f6e10]:
+            - text: /
+            - link "Tous" [ref=f6e11] [cursor=pointer]:
+              - /url: /view/all/
+            - generic "dropdown menu for Tous" [ref=f6e12] [cursor=pointer]
+          - listitem [ref=f6e15]:
+            - text: /
+            - generic [ref=f6e16]: Nouveau Item
+    - generic [ref=f6e17]:
+      - button "Search" [ref=f6e18] [cursor=pointer]
+      - link "Administrer Jenkins" [ref=f6e23] [cursor=pointer]:
+        - /url: /manage
+      - link "Admin FutureKawa" [ref=f6e29] [cursor=pointer]:
+        - /url: /user/admin
+  - generic [ref=f6e42]:
+    - heading "Nouveau Item" [level=1] [ref=f6e43]
+    - generic [ref=f6e44]:
+      - generic [ref=f6e46]:
+        - generic [ref=f6e47]: Saisissez un nom
+        - textbox "Saisissez un nom" [ref=f6e48]: futurekawa
+      - generic [ref=f6e49]:
+        - generic [ref=f6e50]: Select an item type
+        - radiogroup [ref=f6e51]:
+          - list [ref=f6e53]:
+            - radio "Pipeline Organise des activités de longue durée qui peuvent sétendre sur plusieurs agents de construction. Adapté pour la création des pipelines (anciennement connues comme workflows) et/ou pour organiser des activités complexes qui ne sadaptent pas facilement à des tâches de type libre." [checked] [active] [ref=f6e54] [cursor=pointer]:
+              - generic [ref=f6e59]:
+                - generic [ref=f6e60]: Pipeline
+                - generic [ref=f6e61]: Organise des activités de longue durée qui peuvent sétendre sur plusieurs agents de construction. Adapté pour la création des pipelines (anciennement connues comme workflows) et/ou pour organiser des activités complexes qui ne sadaptent pas facilement à des tâches de type libre.
+            - radio "Construire un projet free-style Job legacy polyvalent qui récupère l'état depuis un outil de gestion de version au plus, exécute les étapes de build en série, suivi d'étapes post-construction telles que l'archivage d'artefacts et l'envoi de notifications par e-mail." [ref=f6e62] [cursor=pointer]:
+              - generic [ref=f6e68]:
+                - generic [ref=f6e69]: Construire un projet free-style
+                - generic [ref=f6e70]: Job legacy polyvalent qui récupère l'état depuis un outil de gestion de version au plus, exécute les étapes de build en série, suivi d'étapes post-construction telles que l'archivage d'artefacts et l'envoi de notifications par e-mail.
+            - radio "Construire un projet multi-configuration Adapté aux projets qui nécessitent un grand nombre de configurations différentes, comme des environnements de test multiples, des binaires spécifiques à une plateforme, etc." [ref=f6e71] [cursor=pointer]:
+              - generic [ref=f6e75]:
+                - generic [ref=f6e76]: Construire un projet multi-configuration
+                - generic [ref=f6e77]: Adapté aux projets qui nécessitent un grand nombre de configurations différentes, comme des environnements de test multiples, des binaires spécifiques à une plateforme, etc.
+          - list [ref=f6e79]:
+            - radio "Dossier Crée un conteneur qui stocke des objets imbriqués. Utile pour grouper ensemble des éléments. Contrairement à une vue qui n'est qu'un filtre, un dossier crée un espace de nommage distinct, de sorte que vous pouvez avoir plusieurs éléments du même nom tant qu'ils se trouvent dans des dossiers différents." [ref=f6e80] [cursor=pointer]:
+              - generic [ref=f6e84]:
+                - generic [ref=f6e85]: Dossier
+                - generic [ref=f6e86]: Crée un conteneur qui stocke des objets imbriqués. Utile pour grouper ensemble des éléments. Contrairement à une vue qui n'est qu'un filtre, un dossier crée un espace de nommage distinct, de sorte que vous pouvez avoir plusieurs éléments du même nom tant qu'ils se trouvent dans des dossiers différents.
+            - radio "Organization Folder Creates a set of multibranch project subfolders by scanning for repositories." [ref=f6e87] [cursor=pointer]:
+              - generic [ref=f6e94]:
+                - generic [ref=f6e95]: Organization Folder
+                - generic [ref=f6e96]: Creates a set of multibranch project subfolders by scanning for repositories.
+            - radio "Pipeline Multibranches Crée un ensemble de projets Pipeline en se basant sur les branches détectées dans le dépôt dun gestionnaire de code source." [ref=f6e97] [cursor=pointer]:
+              - generic [ref=f6e104]:
+                - generic [ref=f6e105]: Pipeline Multibranches
+                - generic [ref=f6e106]: Crée un ensemble de projets Pipeline en se basant sur les branches détectées dans le dépôt dun gestionnaire de code source.
+      - button "OK" [ref=f6e110] [cursor=pointer]
+  - contentinfo [ref=f6e36]:
+    - generic [ref=f6e39]:
+      - link "REST API" [ref=f6e40] [cursor=pointer]:
+        - /url: api/
+      - button "Jenkins 2.541.3" [ref=f6e41] [cursor=pointer]
