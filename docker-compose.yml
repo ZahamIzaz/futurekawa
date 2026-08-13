@@ -133,6 +133,33 @@ services:
       - futurekawa_net
     restart: unless-stopped
 
+  # ─────────────────────────────────────────────
+  # Jenkins CI/CD (profil : ci)
+  #
+  # Démarrer Jenkins uniquement :
+  #   docker compose --profile ci up -d jenkins
+  #
+  # ⚠ Le montage /var/run/docker.sock donne à Jenkins
+  #   un accès complet au Docker Engine de l'hôte.
+  #   Acceptable en démonstration locale uniquement.
+  # ─────────────────────────────────────────────
+  jenkins:
+    build:
+      context: ./infrastructure/jenkins
+      dockerfile: Dockerfile
+    container_name: futurekawa_jenkins
+    profiles:
+      - ci
+    ports:
+      - "8080:8080"     # Interface Web Jenkins
+      - "50000:50000"   # Port agents JNLP (si nécessaire)
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - futurekawa_net
+    restart: unless-stopped
+
 # ─────────────────────────────────────────────
 # Volumes nommés (persistance des données)
 # ─────────────────────────────────────────────
@@ -140,6 +167,7 @@ volumes:
   postgres_data:
   mosquitto_data:
   mosquitto_log:
+  jenkins_home:
 
 # ─────────────────────────────────────────────
 # Réseau interne partagé entre les services
