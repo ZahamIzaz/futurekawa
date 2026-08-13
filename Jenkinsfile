@@ -69,21 +69,31 @@ pipeline {
 
         // ─── 3. Build ─────────────────────────────────────────────────────────
         // Échoue immédiatement si TypeScript ou Vite ne compile pas
+        // rm -rf dist évite que les anciennes .js de test soient ramassées par vitest
         stage('Build') {
             parallel {
                 stage('backend-country') {
                     steps {
-                        dir('backend-country') { sh 'npm run build' }
+                        dir('backend-country') {
+                            sh 'rm -rf dist'
+                            sh 'npm run build'
+                        }
                     }
                 }
                 stage('backend-central') {
                     steps {
-                        dir('backend-central') { sh 'npm run build' }
+                        dir('backend-central') {
+                            sh 'rm -rf dist'
+                            sh 'npm run build'
+                        }
                     }
                 }
                 stage('frontend') {
                     steps {
-                        dir('frontend') { sh 'npm run build' }
+                        dir('frontend') {
+                            sh 'rm -rf dist'
+                            sh 'npm run build'
+                        }
                     }
                 }
             }
