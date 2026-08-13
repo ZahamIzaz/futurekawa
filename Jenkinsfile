@@ -34,21 +34,31 @@ pipeline {
         // npm install est utilisé ici car les package-lock.json ont été générés sur Windows
         // et ne contiennent pas les optionalDependencies Linux d'esbuild (vitest 4.x).
         // En production avec un runner Linux natif, régénérer les lock files et utiliser npm ci.
+        // chmod +x est nécessaire car npm crée parfois les scripts .bin/ sans bit exécutable.
         stage('Install') {
             parallel {
                 stage('backend-country') {
                     steps {
-                        dir('backend-country') { sh 'npm install --prefer-offline 2>&1 || npm install' }
+                        dir('backend-country') {
+                            sh 'npm install'
+                            sh 'chmod +x node_modules/.bin/* 2>/dev/null || true'
+                        }
                     }
                 }
                 stage('backend-central') {
                     steps {
-                        dir('backend-central') { sh 'npm install --prefer-offline 2>&1 || npm install' }
+                        dir('backend-central') {
+                            sh 'npm install'
+                            sh 'chmod +x node_modules/.bin/* 2>/dev/null || true'
+                        }
                     }
                 }
                 stage('frontend') {
                     steps {
-                        dir('frontend') { sh 'npm install --prefer-offline 2>&1 || npm install' }
+                        dir('frontend') {
+                            sh 'npm install'
+                            sh 'chmod +x node_modules/.bin/* 2>/dev/null || true'
+                        }
                     }
                 }
             }
