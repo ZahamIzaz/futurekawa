@@ -46,6 +46,36 @@ docker compose ps
 
 ---
 
+## Variables et jeux de données reproductibles
+
+Les scénarios utilisent les valeurs suivantes. Aucune date n'est figée : les timestamps sont générés par PowerShell au moment du test et les identifiants de lots sont récupérés via l'API.
+
+| Donnée | Valeur | Règle associée |
+|--------|--------|-----------------|
+| Entrepôt de test | `BR-WH-01` (pays `BRA`) | Entrepôt du simulateur IoT et du module physique |
+| Topic MQTT | `futurekawa/brazil/BR-WH-01/measurements` | Topic écouté par backend-country |
+| Mesure conforme | 29,0 °C / 55,0 % | Valeurs cibles BRA, dans les plages 26–32 °C et 53–57 % |
+| Température hors seuil | 33,0 °C (humidité 55,0 %) | > 32 °C → alerte `TEMPERATURE` |
+| Humidité hors seuil | 52,5 % (température 29,0 °C), puis 52,2 % | < 53 % → alerte `HUMIDITY` |
+| Timestamp des mesures | Heure courante UTC : `(Get-Date).ToUniversalTime().ToString("o")` | Jamais de date codée en dur |
+| Lot récent | `storageDate` = date du jour | Non expiré (`COMPLIANT`) |
+| Lot > 365 jours | `storageDate` = date du jour − 400 jours | Marqué `EXPIRED` par la vérification de MT-14 |
+
+Pour créer un lot récent et un lot de plus de 365 jours (**crée deux données réelles**, à exécuter une seule fois) :
+
+```powershell
+$url    = "http://localhost:3000/api/countries/BRA/lots"
+$recent = @{ warehouseId = "BR-WH-01"; countryCode = "BRA"
+             storageDate = (Get-Date).ToUniversalTime().ToString("o") } | ConvertTo-Json
+$old    = @{ warehouseId = "BR-WH-01"; countryCode = "BRA"
+             storageDate = (Get-Date).AddDays(-400).ToUniversalTime().ToString("o") } | ConvertTo-Json
+
+Invoke-RestMethod -Method Post -Uri $url -ContentType "application/json" -Body $recent
+Invoke-RestMethod -Method Post -Uri $url -ContentType "application/json" -Body $old
+```
+
+---
+
 ## Cas de tests
 
 ---
@@ -232,19 +262,22 @@ Ordre FIFO respecté. Les lots `storageDate = 2025-01-01` (> 365 jours) sont mar
 | **ID** | MT-06 |
 | **Catégorie** | API |
 | **Objectif** | Vérifier les champs d'un lot individuel |
-| **Préconditions** | MT-05 OK (obtenir un `$lotId`) |
+| **Préconditions** | MT-05 OK (au moins un lot `COMPLIANT`) |
 
 **Commande :**
 ```powershell
-# Récupérer d'abord un ID via MT-05, puis :
-$lotId = "cmsqfbegl0000oh1uzunwtjbg"   # lot COMPLIANT, storageDate 2026-01-15
+# Récupérer dynamiquement le premier lot COMPLIANT (ordre FIFO)
+$lots  = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots"
+$lotId = ($lots.data | Where-Object { $_.status -eq "COMPLIANT" } | Select-Object -First 1).id
+Write-Host "Lot testé : $lotId"
+
 Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots/$lotId" |
   ConvertTo-Json -Depth 5
 ```
 
-**Résultat attendu :** objet avec `id`, `warehouseId`, `countryCode`, `storageDate`, `status`.
+**Résultat attendu :** objet avec `id` (égal à `$lotId`), `warehouseId`, `countryCode`, `storageDate`, `status`.
 
-**Résultat obtenu :**
+**Résultat obtenu (exécution du 2026-08-13) :**
 ```json
 {
   "id": "cmsqfbegl0000oh1uzunwtjbg",
@@ -256,7 +289,7 @@ Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots/$lotId" |
 }
 ```
 
-**Statut : ✅ OK**
+**Statut : 🟠 À revalider** *(procédure mise à jour ; dernière exécution le 2026-08-13 avec l'ancienne version)*
 
 ---
 
@@ -271,14 +304,25 @@ Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots/$lotId" |
 
 **Commande :**
 ```powershell
-$lotId = "cmsqfbegl0000oh1uzunwtjbg"
-Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots/$lotId/measurements" |
-  ConvertTo-Json -Depth 6
+# Récupérer dynamiquement le premier lot COMPLIANT (ordre FIFO, donc le plus ancien)
+$lots  = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots"
+$lotId = ($lots.data | Where-Object { $_.status -eq "COMPLIANT" } | Select-Object -First 1).id
+
+$h = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots/$lotId/measurements"
+Write-Host "Lot : $lotId | entrepôt : $($h.warehouseId) | mesures : $($h.count)"
+
+# Vérifier l'ordre chronologique
+$ts = $h.data | ForEach-Object { [datetimeoffset]$_.timestamp }
+$ok = $true
+for ($i = 1; $i -lt $ts.Count; $i++) { if ($ts[$i] -lt $ts[$i-1]) { $ok = $false } }
+Write-Host "Ordre chronologique : $ok"
+
+$h.data | Select-Object -First 3 | ConvertTo-Json -Depth 4
 ```
 
-**Résultat attendu :** tableau de mesures avec `temperature`, `humidity`, `timestamp` en ordre chronologique.
+**Résultat attendu :** `count` > 0, `Ordre chronologique : True`, mesures avec `temperature`, `humidity`, `timestamp`.
 
-**Résultat obtenu :** 2 318 mesures, ordre `timestamp ASC`. Extrait :
+**Résultat obtenu (exécution du 2026-08-13) :** 2 318 mesures, ordre `timestamp ASC`. Extrait :
 ```json
 [
   { "temperature": 29.1, "humidity": 53.8, "timestamp": "2026-08-12T18:28:11.486Z" },
@@ -286,7 +330,7 @@ Invoke-RestMethod "http://localhost:3000/api/countries/BRA/lots/$lotId/measureme
 ]
 ```
 
-**Statut : ✅ OK**
+**Statut : 🟠 À revalider** *(procédure mise à jour ; dernière exécution le 2026-08-13 avec l'ancienne version)*
 
 ---
 
@@ -339,6 +383,8 @@ Invoke-RestMethod "http://localhost:3001/api/measurements" |
 
 **⚠ Arrêter le simulateur IoT avant ce test** pour éviter toute interférence entre MT-09 et MT-11. Le redémarrer impérativement à la fin de MT-11.
 
+**Utiliser la même session PowerShell pour MT-09, MT-10 et MT-11** : la variable `$alertId` mémorisée ici sert aux deux tests suivants.
+
 ```powershell
 docker compose stop iot-simulator
 ```
@@ -360,13 +406,19 @@ $payload | docker compose exec -T mosquitto mosquitto_pub `
   -h localhost -t "futurekawa/brazil/BR-WH-01/measurements" -s
 
 Start-Sleep 3
-Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true" |
-  ConvertTo-Json -Depth 5
+$active = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true"
+$humidAlerts = @($active.data | Where-Object { $_.type -eq "HUMIDITY" -and $_.warehouseId -eq "BR-WH-01" })
+Write-Host "Alertes HUMIDITY actives pour BR-WH-01 : $($humidAlerts.Count)"
+
+# Mémoriser l'ID de l'alerte pour MT-10 et MT-11
+$alertId = $humidAlerts[0].id
+Write-Host "ID de l'alerte mémorisé : $alertId"
+$humidAlerts[0] | ConvertTo-Json -Depth 5
 ```
 
-**Résultat attendu :** alerte `HUMIDITY`, `measuredValue=52.5`, `minAllowed=53`, `maxAllowed=57`, `resolvedAt=null`.
+**Résultat attendu :** une seule alerte `HUMIDITY` active, `measuredValue=52.5`, `minAllowed=53`, `maxAllowed=57`, `resolvedAt=null`, et un `$alertId` renseigné.
 
-**Résultat obtenu :**
+**Résultat obtenu (exécution du 2026-08-13, avant l'ajout de la mémorisation de l'ID) :**
 ```json
 {
   "id": "cmsrn1qqg0005ns1ugl6njxx7",
@@ -390,11 +442,15 @@ Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true" |
 |-------|--------|
 | **ID** | MT-10 |
 | **Catégorie** | Alertes / Métier |
-| **Objectif** | Vérifier qu'une seconde valeur hors plage ne crée pas de doublon |
-| **Préconditions** | MT-09 OK (alerte HUMIDITY active), simulateur IoT **arrêté** |
+| **Objectif** | Vérifier qu'une nouvelle mesure hors plage ne crée pas de doublon quand une alerte du même type est déjà active |
+| **Préconditions** | MT-09 OK (alerte HUMIDITY active pour BR-WH-01, `$alertId` défini dans la même session PowerShell), simulateur IoT **arrêté** |
 
 **Commande :**
 ```powershell
+# ID de l'alerte active mémorisé en MT-09, avant la deuxième publication
+$idBefore = $alertId
+Write-Host "ID avant la publication : $idBefore"
+
 # Publier humidity = 52.2 (toujours hors plage)
 $payload = @{
     warehouseId = "BR-WH-01"; countryCode = "BRA"
@@ -407,14 +463,16 @@ $payload | docker compose exec -T mosquitto mosquitto_pub `
 
 Start-Sleep 3
 $alerts = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true"
-$humidAlerts = $alerts.data | Where-Object { $_.type -eq "HUMIDITY" -and $_.warehouseId -eq "BR-WH-01" }
+$humidAlerts = @($alerts.data | Where-Object { $_.type -eq "HUMIDITY" -and $_.warehouseId -eq "BR-WH-01" })
 Write-Host "Nombre d'alertes HUMIDITY actives pour BR-WH-01 : $($humidAlerts.Count)"
+Write-Host "ID après la publication : $($humidAlerts[0].id)"
+Write-Host "Même alerte : $($humidAlerts.Count -eq 1 -and $humidAlerts[0].id -eq $idBefore)"
 $humidAlerts | ConvertTo-Json -Depth 4
 ```
 
-**Résultat attendu :** exactement **1** alerte HUMIDITY active pour BR-WH-01 (pas de doublon).
+**Résultat attendu :** exactement **1** alerte HUMIDITY active pour BR-WH-01 et `Même alerte : True` : l'ID est **strictement identique** à celui mémorisé en MT-09, avec `measuredValue = 52.5` (valeur initiale conservée) et `resolvedAt = null`.
 
-> Le simulateur IoT étant arrêté, aucune mesure externe ne peut résoudre l'alerte entre les deux publications. La logique métier garantit qu'une seule alerte HUMIDITY reste active par entrepôt : la première est résolue et une nouvelle est créée avec la valeur actualisée.
+> Règle métier : si une alerte HUMIDITY est déjà active et qu'une nouvelle mesure reste hors plage, **aucune nouvelle alerte n'est créée** (et aucun nouvel email n'est envoyé). L'alerte active n'est pas résolue pour être recréée : elle n'est résolue que lorsqu'une mesure revient dans la plage (voir MT-11).
 
 **Statut : À exécuter**
 
@@ -427,7 +485,7 @@ $humidAlerts | ConvertTo-Json -Depth 4
 | **ID** | MT-11 |
 | **Catégorie** | Alertes / Métier |
 | **Objectif** | Vérifier qu'une valeur dans la plage résout l'alerte HUMIDITY |
-| **Préconditions** | MT-10 OK (alerte HUMIDITY active), simulateur IoT **arrêté** |
+| **Préconditions** | MT-10 OK (alerte HUMIDITY active, `$alertId` défini dans la même session PowerShell), simulateur IoT **arrêté** |
 
 **Commande :**
 ```powershell
@@ -442,19 +500,20 @@ $payload | docker compose exec -T mosquitto mosquitto_pub `
   -h localhost -t "futurekawa/brazil/BR-WH-01/measurements" -s
 
 Start-Sleep 3
-Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true" |
-  ConvertTo-Json -Depth 5
+
+# 1. Plus aucune alerte HUMIDITY active pour BR-WH-01
+$active = Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true"
+$stillActive = @($active.data | Where-Object { $_.type -eq "HUMIDITY" -and $_.warehouseId -eq "BR-WH-01" })
+Write-Host "Alertes HUMIDITY actives restantes : $($stillActive.Count)"
+
+# 2. Vérifier resolvedAt sur l'alerte précise mémorisée en MT-09 (recherche par ID)
+$all   = Invoke-RestMethod "http://localhost:3001/api/alerts"
+$alert = $all.data | Where-Object { $_.id -eq $alertId }
+$alert | ConvertTo-Json -Depth 4
+Write-Host "resolvedAt de l'alerte $alertId : $($alert.resolvedAt)"
 ```
 
-**Résultat attendu :** aucune alerte `HUMIDITY` dans `?active=true` ; `resolvedAt` non nul sur l'alerte précédente.
-
-```powershell
-# Vérifier resolvedAt sur l'historique :
-Invoke-RestMethod "http://localhost:3001/api/alerts" |
-  Select-Object -ExpandProperty data |
-  Where-Object { $_.type -eq "HUMIDITY" } |
-  Select-Object -First 1 | ConvertTo-Json -Depth 4
-```
+**Résultat attendu :** `Alertes HUMIDITY actives restantes : 0` ; l'alerte portant l'ID `$alertId` existe toujours dans l'historique avec un `resolvedAt` non nul.
 
 **⚠ Redémarrer impérativement le simulateur IoT après ce test :**
 ```powershell
@@ -472,27 +531,46 @@ docker compose start iot-simulator
 | **ID** | MT-12 |
 | **Catégorie** | Alertes / Métier |
 | **Objectif** | Vérifier qu'une température > 32°C déclenche une alerte TEMPERATURE |
-| **Préconditions** | MT-01 OK |
+| **Préconditions** | MT-01 OK, simulateur IoT **arrêté** (il publie toutes les 10 s et résoudrait l'alerte) |
 
 **Seuils configurés :** `minAllowed = 26`, `maxAllowed = 32`
 
 **Commande :**
 ```powershell
-docker exec futurekawa_mosquitto sh -c "mosquitto_pub \
-  -h localhost \
-  -t 'futurekawa/brazil/BR-WH-01/measurements' \
-  -m '{\"warehouseId\":\"BR-WH-01\",\"countryCode\":\"BRA\",\"temperature\":33.0,\"humidity\":55.0,\"timestamp\":\"2026-08-13T14:55:30.000Z\"}'"
+docker compose stop iot-simulator
 
+function Publish-Measurement([double]$Temperature, [double]$Humidity) {
+    $payload = @{
+        warehouseId = "BR-WH-01"; countryCode = "BRA"
+        temperature = $Temperature; humidity = $Humidity
+        timestamp   = (Get-Date).ToUniversalTime().ToString("o")
+    } | ConvertTo-Json -Compress
+
+    $payload | docker compose exec -T mosquitto mosquitto_pub `
+      -h localhost -t "futurekawa/brazil/BR-WH-01/measurements" -s
+}
+
+# 1. Mesure conforme : résout toute alerte active et repart d'un état propre
+Publish-Measurement 29.0 55.0
 Start-Sleep 3
-Invoke-RestMethod "http://localhost:3001/api/alerts" |
+
+# 2. Température hors seuil (33 > 32)
+Publish-Measurement 33.0 55.0
+Start-Sleep 3
+
+Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true" |
   Select-Object -ExpandProperty data |
-  Where-Object { $_.type -eq "TEMPERATURE" } |
-  Select-Object -First 1 | ConvertTo-Json -Depth 4
+  Where-Object { $_.type -eq "TEMPERATURE" -and $_.warehouseId -eq "BR-WH-01" } |
+  ConvertTo-Json -Depth 4
+
+# 3. Nettoyage : retour dans la plage (résout l'alerte), puis redémarrage du simulateur
+Publish-Measurement 29.0 55.0
+docker compose start iot-simulator
 ```
 
-**Résultat attendu :** alerte `TEMPERATURE`, `measuredValue=33`, `minAllowed=26`, `maxAllowed=32`.
+**Résultat attendu :** une alerte `TEMPERATURE` active pour BR-WH-01 avec `measuredValue=33`, `minAllowed=26`, `maxAllowed=32`, `resolvedAt=null`.
 
-**Résultat obtenu :**
+**Résultat obtenu (exécution du 2026-08-13, procédure précédente, simulateur actif) :**
 ```json
 {
   "id": "cmsrn2vbg0007ns1umouyfqkl",
@@ -507,9 +585,9 @@ Invoke-RestMethod "http://localhost:3001/api/alerts" |
 }
 ```
 
-> L'alerte a été résolue après 2 secondes par la mesure suivante du simulateur IoT (`temperature=28.2`), ce qui est un comportement conforme.
+> Lors de cette exécution, l'alerte a été résolue après 2 secondes par la mesure suivante du simulateur IoT (`temperature=28.2`). La procédure actuelle arrête le simulateur pour éviter cette interférence.
 
-**Statut : ✅ OK**
+**Statut : 🟠 À revalider** *(procédure mise à jour ; dernière exécution le 2026-08-13 avec l'ancienne version)*
 
 ---
 
@@ -560,26 +638,61 @@ $mails.items | Select-Object -First 3 | ForEach-Object {
 |-------|--------|
 | **ID** | MT-14 |
 | **Catégorie** | Métier / Expiration |
-| **Objectif** | Vérifier le marquage EXPIRED et la non-duplication d'alerte |
-| **Préconditions** | MT-01 OK, au moins un lot avec `storageDate` > 365 jours |
+| **Objectif** | Vérifier, sur un lot créé pour le test, le passage à `EXPIRED`, la création d'une alerte `LOT_EXPIRED` associée et la non-duplication au second appel |
+| **Préconditions** | MT-01 OK (le scénario crée lui-même son lot de test) |
 
-**Commande (1er appel) :**
+**⚠ Ce test crée un lot réel unique** (identifiant et entrepôt suffixés par l'horodatage) : il peut être rejoué sans conflit. Utiliser la même session PowerShell pour toutes les étapes.
+
+**Étape 1 — Créer un lot de 400 jours :**
 ```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:3001/api/lots/check-expiry" |
-  ConvertTo-Json -Depth 5
+$stamp = Get-Date -Format "yyyyMMddHHmmss"
+$body = @{
+    id          = "mt14-$stamp"
+    warehouseId = "WH-MT14-$stamp"
+    countryCode = "BRA"
+    storageDate = (Get-Date).AddDays(-400).ToUniversalTime().ToString("o")
+} | ConvertTo-Json
+
+$lot = Invoke-RestMethod -Method Post -Uri "http://localhost:3000/api/countries/BRA/lots" `
+  -ContentType "application/json" -Body $body
+$lotId = $lot.id
+Write-Host "Lot créé : $lotId | storageDate : $($lot.storageDate) | statut : $($lot.status)"
 ```
 
-**Commande (2e appel — idempotence) :**
+**Étape 2 — 1er appel de la vérification, puis contrôle du lot et de l'alerte :**
 ```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:3001/api/lots/check-expiry" |
-  ConvertTo-Json
+$r1 = Invoke-RestMethod -Method Post -Uri "http://localhost:3001/api/lots/check-expiry"
+Write-Host "1er appel : expiredCount = $($r1.expiredCount)"
+
+$lotAfter = Invoke-RestMethod "http://localhost:3001/api/lots/$lotId"
+Write-Host "Statut du lot : $($lotAfter.status)"
+
+$alerts1 = @((Invoke-RestMethod "http://localhost:3001/api/alerts").data |
+  Where-Object { $_.type -eq "LOT_EXPIRED" -and $_.lotId -eq $lotId })
+Write-Host "Alertes LOT_EXPIRED pour ce lot : $($alerts1.Count)"
+$alertId14 = $alerts1[0].id
+$alerts1[0] | ConvertTo-Json -Depth 4
+```
+
+**Étape 3 — 2e appel (idempotence) :**
+```powershell
+$r2 = Invoke-RestMethod -Method Post -Uri "http://localhost:3001/api/lots/check-expiry"
+Write-Host "2e appel : expiredCount = $($r2.expiredCount)"
+
+$alerts2 = @((Invoke-RestMethod "http://localhost:3001/api/alerts").data |
+  Where-Object { $_.type -eq "LOT_EXPIRED" -and $_.lotId -eq $lotId })
+Write-Host "Alertes LOT_EXPIRED pour ce lot : $($alerts2.Count)"
+Write-Host "Même alerte : $($alerts2.Count -eq 1 -and $alerts2[0].id -eq $alertId14)"
 ```
 
 **Résultat attendu :**
-- 1er appel : lots devenus `EXPIRED` comptabilisés, alerte `LOT_EXPIRED` créée.
-- 2e appel : `expiredCount = 0` (pas de doublon).
+- Étape 1 : lot créé avec le statut `COMPLIANT`.
+- Étape 2 : `expiredCount` ≥ 1 (d'autres lots anciens éventuels sont aussi comptés) ; statut du lot `EXPIRED` ; exactement **1** alerte `LOT_EXPIRED` dont le `lotId` est celui du lot créé, `measuredValue` ≈ 400 jours et `maxAllowed = 365`.
+- Étape 3 : `expiredCount = 0` ; toujours **1** seule alerte pour ce lot, `Même alerte : True` (pas de doublon).
 
-**Résultat obtenu :**
+> Si la vérification horaire automatique de backend-country s'exécute entre l'étape 1 et l'étape 2, le lot peut déjà être `EXPIRED` et `expiredCount` valoir 0 au 1er appel : le statut du lot et l'alerte restent les critères de réussite.
+
+**Résultat obtenu (exécution du 2026-08-13, ancienne procédure basée sur des lots existants) :**
 
 1er appel : `{ "message": "Vérification effectuée.", "expiredCount": 0 }` (les 2 lots étaient déjà `EXPIRED` depuis la session précédente — aucun nouveau lot à marquer).
 
@@ -601,18 +714,18 @@ Alertes `LOT_EXPIRED` actives correspondantes confirmées.
 |-------|--------|
 | **ID** | MT-15 |
 | **Catégorie** | API / Erreurs |
-| **Objectif** | Vérifier que l'accès à un pays non configuré retourne HTTP 404 |
+| **Objectif** | Vérifier que l'accès à un pays non configuré retourne HTTP 404 (`XXX` est un code volontairement inexistant) |
 | **Préconditions** | MT-01 OK |
 
 **Commande :**
 ```powershell
 # PowerShell lève une WebException ; utiliser curl.exe pour voir le code HTTP :
-curl.exe -i http://localhost:3000/api/countries/ECU/lots
+curl.exe -i http://localhost:3000/api/countries/XXX/lots
 ```
 
 **Résultat attendu :** HTTP 404, corps `{ "error": "Pays non configuré" }`.
 
-**Résultat obtenu :**
+**Résultat obtenu (exécution du 2026-08-13, avec un code pays alors non configuré) :**
 ```
 HTTP/1.1 404 Not Found
 Content-Type: application/json; charset=utf-8
@@ -620,7 +733,7 @@ Content-Type: application/json; charset=utf-8
 {"error":"Pays non configuré"}
 ```
 
-**Statut : ✅ OK**
+**Statut : 🟠 À revalider** *(procédure mise à jour ; dernière exécution le 2026-08-13 avec l'ancienne version)*
 
 ---
 
@@ -717,13 +830,13 @@ HTTP/1.1 503 Service Unavailable
 | **Préconditions** | MT-17 OK |
 
 **Étapes :**
-1. Sur `http://localhost:5173`, cliquer sur un lot BR-WH-01 avec des mesures.
+1. Sur `http://localhost:5173`, cliquer sur un lot de l'entrepôt BR-WH-01 possédant des mesures.
 2. Vérifier les informations du lot (id, entrepôt, date, statut).
 3. Vérifier le **graphique température** — courbe chronologique.
 4. Vérifier le **graphique humidité** — courbe chronologique.
-5. Vérifier que les données correspondent à BR-WH-01.
+5. Vérifier que l'historique affiché correspond à l'entrepôt du lot sélectionné (BR-WH-01).
 
-**Résultat attendu :** graphiques tracés, données cohérentes avec les 2 318 mesures disponibles pour le lot `cmsqfbegl0000oh1uzunwtjbg`.
+**Résultat attendu :** les deux graphiques affichent un historique non vide, dans l'ordre chronologique (dates croissantes de gauche à droite), cohérent avec l'entrepôt sélectionné et avec les mesures renvoyées par l'API (voir MT-07).
 
 **Statut : À exécuter** *(nécessite validation visuelle)*
 
@@ -778,6 +891,72 @@ HTTP/1.1 503 Service Unavailable
 
 ---
 
+### MT-21 — Module IoT physique NodeMCU + DHT22
+
+| Champ | Valeur |
+|-------|--------|
+| **ID** | MT-21 |
+| **Catégorie** | IoT / Matériel |
+| **Objectif** | Vérifier la chaîne complète avec le capteur réel : NodeMCU + DHT22 → Wi-Fi → Mosquitto → backend-country → PostgreSQL → API → frontend |
+| **Préconditions** | MT-01 OK ; NodeMCU ESP8266 avec capteur DHT22 câblé (broche de données `D2`, comme dans le sketch) ; sketch `Arduino/sketch_oct5a/sketch_oct5a.ino` téléversé ; PC et NodeMCU sur le même réseau Wi-Fi ; port MQTT 1883 autorisé par le pare-feu du PC ; Moniteur série Arduino ouvert à 115200 bauds |
+
+**⚠ Paramètres locaux :** renseigner le nom et le mot de passe du réseau Wi-Fi ainsi que l'adresse du broker (adresse du PC hôte sur le réseau local, visible avec `ipconfig`) uniquement dans la copie locale du sketch. Ne jamais les committer ni les reporter dans la documentation ou les captures.
+
+**Étape 1 — Arrêter le simulateur et poser un repère temporel :**
+```powershell
+docker compose stop iot-simulator
+docker compose ps iot-simulator          # ne doit plus être "Up"
+$start = [datetimeoffset]::UtcNow        # toute mesure postérieure vient du module physique
+```
+
+**Étape 2 — Connexion Wi-Fi :** alimenter ou réinitialiser le NodeMCU. Le Moniteur série affiche `Connexion WiFi`, puis `WiFi connecte` et l'adresse attribuée au module.
+
+**Étape 3 — Connexion au broker Mosquitto :** le Moniteur série affiche `Connexion Mosquitto... OK`. Côté broker :
+```powershell
+docker compose logs --tail 20 mosquitto   # connexion du client ESP8266-BR-WH-01
+```
+
+**Étape 4 — Lecture réelle du DHT22 :** aucun message `Erreur lecture DHT22` dans le Moniteur série. Pour prouver que la mesure est réelle, approcher brièvement la main ou souffler sur le capteur : l'humidité et la température doivent évoluer sur les mesures suivantes (le simulateur étant arrêté, aucune autre source ne publie).
+
+**Étape 5 — Publication sur le topic attendu :**
+```powershell
+docker compose exec -T mosquitto mosquitto_sub -h localhost `
+  -t "futurekawa/brazil/BR-WH-01/measurements" -C 3 -W 60
+```
+Chaque message est un JSON contenant `warehouseId = BR-WH-01`, `countryCode = BRA`, `temperature`, `humidity` et un `timestamp` ISO 8601 UTC.
+
+**Étape 6 — Réception par backend-country :**
+```powershell
+docker compose logs --tail 20 backend-country
+```
+Lignes attendues : `[mqtt] Mesure enregistrée — BR-WH-01  T=...°C  H=...%`.
+
+**Étapes 7 et 8 — Persistance et vérification via l'API :**
+```powershell
+$m = Invoke-RestMethod "http://localhost:3001/api/measurements?warehouseId=BR-WH-01&limit=10"
+$m.data | Where-Object { [datetimeoffset]$_.timestamp -gt $start } |
+  Select-Object id, warehouseId, countryCode, temperature, humidity, timestamp |
+  Format-Table
+```
+
+**Étape 9 — Frontend :** ouvrir `http://localhost:5173`, sélectionner le Brésil, ouvrir un lot de l'entrepôt BR-WH-01 (date de stockage antérieure à la mesure), cliquer **Actualiser**. La nouvelle mesure apparaît en fin de courbe ; survoler le dernier point pour comparer ses valeurs à celles de l'étape 8.
+
+**Fin du test :** redémarrer le simulateur si nécessaire.
+```powershell
+docker compose start iot-simulator
+```
+
+**Résultat attendu :**
+- Wi-Fi et broker connectés (Moniteur série et logs Mosquitto) ;
+- mesures réelles du DHT22 publiées sur `futurekawa/brazil/BR-WH-01/measurements`, valeurs qui varient quand le capteur est sollicité ;
+- chaque mesure est tracée dans les logs de backend-country ;
+- les mesures postérieures à `$start` sont présentes via l'API, avec les mêmes valeurs que le topic ;
+- la nouvelle mesure est visible dans le frontend après actualisation.
+
+**Statut : À exécuter** *(nécessite le matériel physique)*
+
+---
+
 ## Résumé des résultats
 
 | ID | Scénario | Catégorie | Statut |
@@ -787,24 +966,27 @@ HTTP/1.1 503 Service Unavailable
 | MT-03 | Health backend central | API | ✅ OK |
 | MT-04 | Liste des pays | API | ✅ OK |
 | MT-05 | Liste des lots FIFO | API / Métier | ✅ OK |
-| MT-06 | Consultation d'un lot | API | ✅ OK |
-| MT-07 | Historique mesures d'un lot | API / Données | ✅ OK |
+| MT-06 | Consultation d'un lot | API | 🟠 À revalider |
+| MT-07 | Historique mesures d'un lot | API / Données | 🟠 À revalider |
 | MT-08 | Publication MQTT manuelle | IoT / MQTT | ✅ OK |
 | MT-09 | Création alerte HUMIDITY | Alertes | ✅ OK |
-| MT-10 | Non-duplication alerte | Alertes | À exécuter |
-| MT-11 | Résolution alerte | Alertes | À exécuter |
-| MT-12 | Alerte température | Alertes | ✅ OK |
+| MT-10 | Non-duplication alerte | Alertes | 🔲 À exécuter |
+| MT-11 | Résolution alerte | Alertes | 🔲 À exécuter |
+| MT-12 | Alerte température | Alertes | 🟠 À revalider |
 | MT-13 | Email d'alerte MailHog | Email | ✅ OK |
 | MT-14 | Contrôle expiration lots | Métier | ✅ OK |
-| MT-15 | Pays non configuré (404) | API / Erreurs | ✅ OK |
+| MT-15 | Pays non configuré (404) | API / Erreurs | 🟠 À revalider |
 | MT-16 | Résilience backend pays (503) | Résilience | ✅ OK |
-| MT-17 | Frontend : tableau de bord FIFO | Frontend | À exécuter |
-| MT-18 | Frontend : graphiques lot | Frontend | À exécuter |
-| MT-19 | Frontend : création d'un lot | Frontend | À exécuter |
-| MT-20 | Frontend : actualisation mesures | Frontend | À exécuter |
+| MT-17 | Frontend : tableau de bord FIFO | Frontend | 🔲 À exécuter |
+| MT-18 | Frontend : graphiques lot | Frontend | 🔲 À exécuter |
+| MT-19 | Frontend : création d'un lot | Frontend | 🔲 À exécuter |
+| MT-20 | Frontend : actualisation mesures | Frontend | 🔲 À exécuter |
+| MT-21 | Module IoT physique NodeMCU + DHT22 | IoT / Matériel | 🔲 À exécuter |
 
-**Tests exécutés :** 16 / 20  
-**Résultat :** 16 ✅ OK — 0 ❌ KO — 4 🔲 À exécuter (validation visuelle frontend)
+**Total de scénarios :** 21  
+**Résultat :** 10 ✅ OK — 0 ❌ KO — 4 🟠 À revalider (MT-06, MT-07, MT-12, MT-15) — 7 🔲 À exécuter (MT-10, MT-11, MT-17, MT-18, MT-19, MT-20, MT-21)
+
+> **🟠 À revalider** : la procédure a été mise à jour (lot récupéré dynamiquement, timestamp courant, simulateur arrêté, code pays `XXX`) ; le résultat obtenu date de l'exécution du 2026-08-13 avec l'ancienne version. Ces scénarios repasseront ✅ OK uniquement après une nouvelle exécution.
 
 ---
 
@@ -819,7 +1001,7 @@ Pour constituer les preuves de la soutenance, effectuer et conserver les capture
 | 3 | Alerte active (LOT_EXPIRED ou HUMIDITY) | `Invoke-RestMethod "http://localhost:3000/api/countries/BRA/alerts?active=true"` |
 | 4 | Email MailHog — corps de l'alerte | `http://localhost:8025` → ouvrir un email d'alerte |
 | 5 | HTTP 503 backend pays indisponible | `curl.exe -i http://localhost:3000/api/countries/BRA/lots` (après stop) |
-| 6 | HTTP 404 pays non configuré | `curl.exe -i http://localhost:3000/api/countries/ECU/lots` |
+| 6 | HTTP 404 pays non configuré | `curl.exe -i http://localhost:3000/api/countries/XXX/lots` |
 | 7 | Dashboard Frontend — lots FIFO | `http://localhost:5173` |
 | 8 | Graphiques température/humidité | Cliquer sur un lot dans le frontend |
 | 9 | Jenkins — build vert (pipeline 7 stages) | `http://localhost:8080/job/futurekawa/` |

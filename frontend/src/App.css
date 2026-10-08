@@ -190,6 +190,16 @@ body {
 .detail-value { font-size: 0.92rem; font-weight: 500; }
 
 /* ── Charts ─────────────────────────────────────────────────────────────────── */
+.last-measurement {
+  background: #f8f9fa;
+  border-left: 3px solid #2980b9;
+  border-radius: 4px;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 1rem;
+}
+.last-measurement-date   { font-size: 0.85rem; font-weight: 600; color: #2c3e50; }
+.last-measurement-values { font-size: 0.8rem; color: #7f8c8d; margin-top: 0.15rem; }
+
 .charts-container {
   display: grid;
   grid-template-columns: 1fr 1fr;

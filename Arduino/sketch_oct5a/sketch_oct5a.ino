@@ -20,7 +20,7 @@ const char* WIFI_PASSWORD = "Aziz2626";
 // ==========================
 // MQTT FUTUREKAWA
 // ==========================
-const char* MQTT_SERVER = "10.200.206.47";
+const char* MQTT_SERVER = "10.218.131.47";
 const int MQTT_PORT = 1883;
 
 const char* MQTT_TOPIC =
