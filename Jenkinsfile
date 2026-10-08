@@ -2,7 +2,7 @@
 // Pipeline CI/CD FutureKawa
 // ───────────────────────────────────────────────────────────────────────────────
 // Stages :
-//   Checkout → Install → Build → Tests (37+12+19=68) → Quality → Docker → Archive
+//   Checkout → Install → Build → Tests → Quality → Docker → Archive
 //
 // Le pipeline échoue automatiquement si :
 //   • une compilation TypeScript/Vite échoue
@@ -104,17 +104,17 @@ pipeline {
         // Produit des rapports JUnit XML dans test-results/junit.xml
         stage('Tests') {
             parallel {
-                stage('backend-country (37)') {
+                stage('backend-country') {
                     steps {
                         dir('backend-country') { sh 'npm run test:ci' }
                     }
                 }
-                stage('backend-central (12)') {
+                stage('backend-central') {
                     steps {
                         dir('backend-central') { sh 'npm run test:ci' }
                     }
                 }
-                stage('frontend (19)') {
+                stage('frontend') {
                     steps {
                         dir('frontend') { sh 'npm run test:ci' }
                     }
@@ -125,7 +125,8 @@ pipeline {
         // ─── 5. Contrôle Qualité ──────────────────────────────────────────────
         // Vérifie que :
         //   • les trois compilations TypeScript/Vite ont réussi (stage Build)
-        //   • les rapports de tests JUnit existent (preuves des 68 tests)
+        //   • les rapports de tests JUnit existent et sont publiés dans Jenkins
+        //     (Jenkins calcule lui-même le nombre de tests réussis/échoués)
         //
         // Note : ESLint n'est pas configuré dans ce projet ; la qualité du typage
         //        est garantie par la compilation TypeScript stricte (stage Build).
@@ -143,21 +144,20 @@ pipeline {
                     echo ""
                     echo "[TESTS]"
                     test -f backend-country/test-results/junit.xml \
-                        && echo "  OK  backend-country  : rapport JUnit present (37 tests)" \
+                        && echo "  OK  backend-country  : rapport JUnit present" \
                         || { echo "  KO  backend-country  : rapport JUnit ABSENT"; exit 1; }
                     test -f backend-central/test-results/junit.xml \
-                        && echo "  OK  backend-central  : rapport JUnit present (12 tests)" \
+                        && echo "  OK  backend-central  : rapport JUnit present" \
                         || { echo "  KO  backend-central  : rapport JUnit ABSENT"; exit 1; }
                     test -f frontend/test-results/junit.xml \
-                        && echo "  OK  frontend         : rapport JUnit present (19 tests)" \
+                        && echo "  OK  frontend         : rapport JUnit present" \
                         || { echo "  KO  frontend         : rapport JUnit ABSENT"; exit 1; }
-                    echo ""
-                    echo "  TOTAL : 68 tests passes / 68"
-                    echo ""
-                    echo "======================================="
-                    echo "     Quality Gate : PASS"
-                    echo "======================================="
                 '''
+                // Échoue si aucun rapport n'est trouvé ; Jenkins calcule les totaux
+                junit(
+                    allowEmptyResults: false,
+                    testResults: '**/test-results/junit.xml'
+                )
             }
         }
 
@@ -190,11 +190,7 @@ pipeline {
                     echo "  ${PROJECT}/frontend:${IMAGE_TAG}"         >> build-info.txt
                     echo "  ${PROJECT}/iot-simulator:${IMAGE_TAG}"    >> build-info.txt
                     echo ""                                          >> build-info.txt
-                    echo "Tests :"                                   >> build-info.txt
-                    echo "  backend-country : 37 tests passes"      >> build-info.txt
-                    echo "  backend-central : 12 tests passes"      >> build-info.txt
-                    echo "  frontend        : 19 tests passes"      >> build-info.txt
-                    echo "  TOTAL           : 68 / 68"              >> build-info.txt
+                    echo "Résultats des tests : voir rapports JUnit Jenkins" >> build-info.txt
                 """
                 archiveArtifacts allowEmptyArchive: true,
                     artifacts: [
@@ -215,18 +211,12 @@ pipeline {
     // ─── Post-actions ─────────────────────────────────────────────────────────
     post {
 
-        always {
-            // Publication des résultats de tests dans l'interface Jenkins
-            junit allowEmptyResults: true,
-                  testResults: '**/test-results/junit.xml'
-        }
-
         success {
             echo """
 ==============================================
   Pipeline FutureKawa  -  SUCCES
   Build #${BUILD_NUMBER}
-  68 tests passes | 4 images Docker buildees
+  Tests automatisés validés via JUnit | 4 images Docker buildees
 ==============================================
 """
         }
