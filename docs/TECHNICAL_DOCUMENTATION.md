@@ -6,12 +6,12 @@
 
 FutureKawa est une plateforme de supervision du stockage du café dans les entrepôts des pays producteurs. Elle collecte en continu les données de température et d'humidité, détecte les écarts par rapport aux seuils définis, déclenche des alertes et notifie les responsables par email.
 
-**Prototype actuel :** le Brésil est entièrement implémenté comme pays pilote (entrepôt `BR-WH-01`).
+**Prototype actuel :** le Brésil est entièrement implémenté comme pays pilote (entrepôt `BR-WH-01`), équipé d'un module IoT physique fonctionnel (NodeMCU ESP8266 + capteur DHT22). Un simulateur IoT reste disponible pour la reproductibilité sans matériel physique.
 
 ### Vue d'ensemble du flux
 
 ```
-Capteur IoT / Simulateur
+Module IoT physique (NodeMCU + DHT22) ou simulateur
         │ MQTT
         ▼
    Mosquitto Broker
@@ -38,7 +38,8 @@ L'architecture est conçue pour être étendue à d'autres pays producteurs (Éq
 
 ```mermaid
 flowchart LR
-    SIM["Simulateur IoT\nBR-WH-01"]
+    ESP["Module IoT physique\nNodeMCU ESP8266 + DHT22\nBR-WH-01"]
+    SIM["Simulateur IoT\n(reproductibilité sans matériel)\nBR-WH-01"]
     MQTT["Mosquitto\nMQTT :1883"]
     BC["Backend Country\nBrésil :3001"]
     DB[("PostgreSQL\n:5432")]
@@ -47,6 +48,7 @@ flowchart LR
     FRONT["Frontend React\n:5173"]
     JENKINS["Jenkins CI/CD\n:8080"]
 
+    ESP -->|"futurekawa/brazil/\nBR-WH-01/measurements"| MQTT
     SIM -->|"futurekawa/brazil/\nBR-WH-01/measurements"| MQTT
     MQTT -->|subscribe| BC
     BC -->|Prisma ORM| DB
@@ -62,7 +64,8 @@ flowchart LR
 
 | Composant | Technologie | Rôle |
 |-----------|-------------|------|
-| iot-simulator | Node.js / TypeScript | Publie une mesure toutes les 10 s sur le broker MQTT |
+| module IoT physique | NodeMCU ESP8266 + DHT22 (`Arduino/sketch_oct5a`) | Mesure la température et l'humidité et publie une mesure toutes les 10 s sur le broker MQTT |
+| iot-simulator | Node.js / TypeScript | Publie une mesure toutes les 10 s sur le broker MQTT ; alternative reproductible sans matériel physique |
 | mosquitto | Eclipse Mosquitto 2 | Broker MQTT — point de collecte des mesures IoT |
 | backend-country | Node.js / Express / TypeScript / Prisma | Backend local Brésil : persistance, alertes, API REST |
 | postgres | PostgreSQL 16 | Base de données des mesures, lots et alertes du Brésil |
@@ -105,7 +108,7 @@ Le backend central (siège) n'accède **jamais directement** à PostgreSQL. Il i
 | Composant | Version |
 |-----------|---------|
 | Node.js | 22.x |
-| Express | 5.x |
+| Express | 4.x |
 | TypeScript | 5.x |
 | Prisma ORM | 6.x |
 | PostgreSQL | 16 |
@@ -139,7 +142,7 @@ Le backend central (siège) n'accède **jamais directement** à PostgreSQL. Il i
 | `GET` | `/api/alerts` | Toutes les alertes (param `?active=true`) | `{ data: [...], count }` |
 
 **Paramètres notables :**
-- `GET /api/measurements?warehouseId=BR-WH-01&limit=50` — filtrage et pagination
+- `GET /api/measurements?warehouseId=BR-WH-01&limit=50` — filtrage et limitation du nombre de résultats
 - `GET /api/alerts?active=true` — alertes non résolues uniquement
 
 ---
@@ -192,10 +195,14 @@ Cela signifie que toutes les mesures de l'entrepôt `BR-WH-01` reçues **depuis 
 | Broker | Eclipse Mosquitto 2 |
 | Port | 1883 |
 | Topic souscrit | `futurekawa/brazil/+/measurements` |
-| Topic publié (simulateur) | `futurekawa/brazil/BR-WH-01/measurements` |
-| QoS | 1 |
+| Topic publié (module physique et simulateur) | `futurekawa/brazil/BR-WH-01/measurements` |
+| QoS de l'abonnement (backend-country) | 1 (`mqttClient.ts`) |
+| QoS de publication (simulateur) | 1 (`simulator.ts`) |
+| QoS de publication (module physique) | Non spécifié : le sketch appelle `publish(topic, payload)` sans paramètre de QoS |
 
 > Le `+` dans le topic souscrit est un wildcard single-level MQTT : il correspond à n'importe quel identifiant d'entrepôt brésilien.
+
+> Le projet ne démontre aucune garantie de livraison ni de rejeu des mesures publiées pendant une coupure : le module physique ne conserve pas localement les mesures non publiées (voir section 18).
 
 ### Structure du payload
 
@@ -216,6 +223,8 @@ Cela signifie que toutes les mesures de l'entrepôt `BR-WH-01` reçues **depuis 
 | `temperature` | `number` | Température en degrés Celsius |
 | `humidity` | `number` | Humidité relative en % |
 | `timestamp` | `string` | Horodatage ISO 8601 UTC de la mesure |
+
+Le module physique publie `temperature` et `humidity` avec 2 décimales et un `timestamp` au format `YYYY-MM-DDTHH:MM:SSZ` (sans millisecondes).
 
 Tout message avec un payload invalide ou des champs manquants est ignoré avec une trace d'erreur.
 
@@ -414,7 +423,7 @@ Le backend central reste disponible et répond à `/health` même si tous les ba
 | Composant | Version |
 |-----------|---------|
 | React | 18.3 |
-| Vite | 6.x |
+| Vite | 5.x |
 | TypeScript | 5.x |
 | Chart.js | 4.4 |
 | react-chartjs-2 | 5.2 |
@@ -537,11 +546,46 @@ Les données sont conservées dans des volumes Docker nommés :
 
 ---
 
-## 18. Simulateur IoT
+## 18. Module IoT physique et simulateur
 
-Le simulateur (`iot/simulator`) remplace le matériel physique pendant le développement.
+### Module physique NodeMCU + DHT22
 
-### Comportement
+Le prototype IoT physique est fonctionnel. Son firmware est le sketch `Arduino/sketch_oct5a/sketch_oct5a.ino`.
+
+| Élément | Détail |
+|----------|--------|
+| Microcontrôleur | NodeMCU ESP8266 |
+| Capteur | DHT22 (température et humidité) |
+| Fréquence de publication | Une mesure toutes les 10 secondes |
+| Synchronisation de l'heure | NTP (`pool.ntp.org`, `time.nist.gov`) |
+| Horodatage | ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SSZ`) |
+| Topic MQTT | `futurekawa/brazil/BR-WH-01/measurements` |
+| Identifiant client MQTT | `ESP8266-BR-WH-01` |
+
+**Câblage du DHT22 :**
+
+| Broche DHT22 | Broche NodeMCU |
+|--------------|----------------|
+| VCC | 3V3 |
+| DATA | D2 (GPIO4) |
+| GND | GND |
+
+Le module publie le payload JSON décrit en section 8 (`warehouseId`, `countryCode`, `temperature`, `humidity`, `timestamp`). Le nom du réseau Wi-Fi, son mot de passe et l'adresse du broker sont propres à chaque installation et ne sont pas reproduits dans cette documentation.
+
+### Stratégie de reconnexion du module physique
+
+- **Wi-Fi :** à chaque cycle, si la connexion Wi-Fi est perdue, le module relance la connexion et attend son rétablissement avant de continuer.
+- **MQTT :** si le client MQTT n'est pas connecté, le module retente la connexion avec une temporisation de 3 secondes entre deux tentatives, jusqu'au succès.
+- **Lecture DHT22 invalide :** la lecture est abandonnée sans publication (message `Erreur lecture DHT22` sur la liaison série) ; le module attend 2 secondes puis retente au cycle suivant.
+- **Échec de publication :** il est signalé sur la liaison série (`Publication ECHEC`) ; la mesure n'est pas renvoyée, une nouvelle mesure est lue au cycle suivant.
+
+Le sketch ne stocke pas les mesures localement : une mesure non publiée pendant une coupure n'est pas rejouée par le module.
+
+### Simulateur IoT
+
+Le simulateur (`iot/simulator`) reste disponible uniquement comme moyen de reproductibilité sans matériel physique (démonstration et tests manuels). Il publie sur le même topic et avec le même entrepôt que le module physique : pour utiliser le module physique, arrêter le simulateur (`docker compose stop iot-simulator`, voir MT-21) afin de ne pas mélanger les deux sources.
+
+### Comportement du simulateur
 
 - **Topic publié :** `futurekawa/brazil/BR-WH-01/measurements`
 - **Intervalle :** toutes les 10 secondes (configurable via `INTERVAL_MS`)
@@ -551,24 +595,9 @@ Le simulateur (`iot/simulator`) remplace le matériel physique pendant le dével
 
 Ces bornes larges (±5°C / ±5%) permettent de générer occasionnellement des valeurs hors seuil acceptables (±3°C / ±2%), déclenchant et résolvant des alertes de façon réaliste.
 
-### Remplacement par le matériel réel
+### Chaîne de traitement commune
 
-Lors de la réception des capteurs physiques, le simulateur sera remplacé par un microcontrôleur (ex. ESP32) connecté à des capteurs de température et d'humidité. Le topic MQTT et le format JSON seront conservés :
-
-```
-Microcontrôleur + capteur
-         │ MQTT
-         ▼
-    Mosquitto :1883
-         │
-         ▼
-  backend-country (inchangé)
-  PostgreSQL (inchangé)
-  backend-central (inchangé)
-  frontend (inchangé)
-```
-
-Seul le simulateur est remplacé — aucun changement côté backend ni frontend.
+Le module physique et le simulateur publient le même format JSON sur le même topic : backend-country, PostgreSQL, backend-central et frontend traitent leurs mesures de la même manière.
 
 ---
 
@@ -581,9 +610,11 @@ Seul le simulateur est remplacé — aucun changement côté backend ni frontend
 | Unitaires / API — backend-country | 6 | 37 | Vitest + Supertest |
 | Unitaires / API — backend-central | 1 | 12 | Vitest + Supertest |
 | Composants React — frontend | 6 | 19 | Vitest + React Testing Library |
-| **Total tests automatisés** | **13** | **68** | |
-| E2E — navigation et création | 2 | 2 | Playwright + Chromium |
-| **Total général** | **15** | **70** | |
+| **Total Vitest (exécutés et publiés en JUnit dans Jenkins)** | **13** | **68** | |
+| E2E — navigation et création | 2 | 2 | Playwright + Chromium (exécutés séparément) |
+| **Total tests automatisés** | **15** | **70** | |
+
+Les 68 tests Vitest sont exécutés par le pipeline Jenkins et publiés en JUnit. Les 2 tests E2E Playwright sont exécutés séparément sur la stack Docker : ils ne sont pas lancés par Jenkins et ne sont pas publiés en JUnit. Total : 70 tests automatisés.
 
 ### Types de tests
 
@@ -593,7 +624,7 @@ Seul le simulateur est remplacé — aucun changement côté backend ni frontend
 
 **Tests composants React :** React Testing Library + jsdom. Tous les services API et Chart.js sont mockés. Couvrent le rendu, les interactions utilisateur (clic, saisie, soumission), les cas limites (liste vide).
 
-**Tests E2E Playwright :** nécessitent le stack Docker complet. Testent la navigation pays→lots et la création d'un lot via l'interface.
+**Tests E2E Playwright :** utilisent la stack Docker réelle ; le frontend Docker expose déjà l'application sur `http://localhost:5173`, aucun serveur Vite séparé n'est requis. Ils testent la navigation pays→lots et la création d'un lot via l'interface, et sont exécutés séparément du pipeline Jenkins.
 
 ### Lancement
 
@@ -607,7 +638,8 @@ cd backend-central && npm test
 # frontend (19 tests)
 cd frontend && npm test
 
-# E2E (stack Docker requise + Vite sur :5173)
+# E2E (stack Docker démarrée : le frontend expose déjà http://localhost:5173)
+npx playwright install   # une seule fois
 npx playwright test
 ```
 
@@ -617,7 +649,7 @@ npx playwright test
 
 Un plan de tests manuels complet est disponible dans [docs/MANUAL_TESTS.md](MANUAL_TESTS.md).
 
-Il documente 20 scénarios reproductibles couvrant :
+Il documente 21 tests manuels reproductibles (MT-21 nécessite le matériel physique) couvrant :
 
 | Scénario | Référence |
 |----------|-----------|
@@ -633,6 +665,7 @@ Il documente 20 scénarios reproductibles couvrant :
 | Erreur 404 pays inconnu | MT-15 |
 | Résilience HTTP 503 | MT-16 |
 | Frontend — tableau de bord, graphiques, création | MT-17 à MT-20 |
+| Module IoT physique NodeMCU + DHT22 | MT-21 |
 
 ---
 
@@ -645,14 +678,16 @@ flowchart LR
     A[Checkout] --> B[Install\nnpm install\nprisma generate]
     B --> C[Build\ntsc / vite build]
     C --> D[Tests\nVitest 68 tests]
-    D --> E[Quality Gate\n3 JUnit XML]
+    D --> E[Quality\nvérification + publication JUnit]
     E --> F[Docker Build\n4 images]
     F --> G[Archive\nbuild-info.txt\njunit.xml]
 ```
 
-Chaque stage est parallélisé sur les 3 composants (backend-country, backend-central, frontend). **Le pipeline échoue immédiatement si une étape échoue.**
+Les stages Install, Build et Tests sont parallélisés sur les 3 composants (backend-country, backend-central, frontend). Checkout, Quality et Archive ne sont pas parallélisés de cette manière ; Docker Build construit 4 images à la suite. **Le pipeline échoue immédiatement si une étape échoue.**
 
-### Résultats (build #7)
+### Résultats de référence
+
+Les durées ci-dessous sont indicatives. Le numéro de build Jenkins et le commit Git de référence seront figés lors de la livraison finale.
 
 | Stage | Résultat | Durée |
 |-------|----------|-------|
@@ -660,7 +695,7 @@ Chaque stage est parallélisé sur les 3 composants (backend-country, backend-ce
 | Install | ✅ | ~45 s |
 | Build | ✅ | ~30 s |
 | Tests (68 tests) | ✅ | ~20 s |
-| Quality Gate | ✅ | ~3 s |
+| Quality | ✅ | ~3 s |
 | Docker Build (× 4) | ✅ | ~3 min |
 | Archive | ✅ | ~5 s |
 
@@ -675,7 +710,7 @@ Chaque stage est parallélisé sur les 3 composants (backend-country, backend-ce
 
 ### Rapports JUnit
 
-Les rapports XML (format JUnit) sont publiés dans Jenkins UI après chaque build :
+Les rapports XML (format JUnit) des 68 tests Vitest sont publiés dans Jenkins UI par le stage Quality après chaque build (les 2 tests E2E Playwright ne sont pas concernés) :
 
 ```
 http://localhost:8080/job/futurekawa/lastBuild/testReport/
@@ -695,11 +730,11 @@ Cette section présente honnêtement les limites connues du prototype dans le co
 |--------|-------------|
 | **Pas d'authentification** | L'API REST et l'interface web ne requièrent aucune authentification |
 | **MQTT sans TLS** | Le broker Mosquitto fonctionne en clair sur le port 1883 |
-| **Secrets en clair** | Les mots de passe et URL sont dans `.env` et `docker-compose.yml` (configuration de démonstration) |
+| **Secrets en clair** | Le mot de passe PostgreSQL de démonstration est en clair dans `.env` (racine et `backend-country`). `docker-compose.yml` ne contient que des références à des variables d'environnement (ex. `${POSTGRES_PASSWORD}`) et des valeurs de configuration non secrètes (URL internes, ports, adresses email de démonstration). Le sketch Arduino contient en clair les identifiants Wi-Fi et l'adresse du broker utilisés pour les essais. |
 | **MailHog** | Serveur SMTP factice — les emails ne sont pas réellement envoyés |
 | **Un seul pays** | Seul le Brésil est entièrement implémenté |
-| **Un seul entrepôt** | Le simulateur IoT ne couvre que `BR-WH-01` |
-| **Simulateur** | Les données IoT sont simulées en attendant le matériel physique |
+| **Un seul entrepôt** | Le module physique et le simulateur IoT ne couvrent que `BR-WH-01` |
+| **Simulateur** | Disponible uniquement pour la reproductibilité sans matériel physique ; le module NodeMCU + DHT22 publie des mesures réelles |
 
 Ces points constituent des évolutions naturelles vers une version de production, non des défauts du prototype.
 
@@ -735,8 +770,8 @@ Le prototype FutureKawa implémente une architecture distribuée complète et op
 
 - **Architecture distribuée** : chaque pays producteur gère ses données localement ; le siège supervise via un proxy REST centralisé.
 - **Prototype Brésil opérationnel** : collecte IoT via MQTT, persistance PostgreSQL, alertes en temps réel, notifications email, interface de supervision React.
-- **Qualité** : 70 tests automatisés (68 unitaires + 2 E2E) avec rapports JUnit dans Jenkins ; pipeline CI/CD complet en 7 stages.
+- **Qualité** : 70 tests automatisés : 68 tests Vitest exécutés dans Jenkins avec rapports JUnit, et 2 tests E2E Playwright exécutés séparément sur la stack Docker ; pipeline CI/CD en 7 stages.
 - **Extensibilité** : ajouter un pays ne nécessite que la configuration de son URL et de ses seuils — aucun changement architectural.
-- **Préparation matérielle** : le simulateur IoT sera remplacé par le matériel réel sans modifier le reste de la stack.
+- **IoT** : un prototype physique NodeMCU ESP8266 + DHT22 est fonctionnel et publie sur le même topic MQTT ; le simulateur reste disponible pour la reproductibilité sans matériel.
 
 La plateforme est prête pour la démonstration MSPR et fournit les bases d'une mise en production progressive par pays.
